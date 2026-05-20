@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Star, Radio, ShoppingBag, Wrench, Building2,
   Gavel, Package, Wallet, ArrowUpFromLine, Gift, CreditCard, Zap,
   Trophy, ImageIcon, BarChart3, Shield, CheckSquare, Bell, Sparkles,
-  Flag, Settings, ScrollText, LogOut
+  Flag, Settings, ScrollText, LogOut, Briefcase, Tag
 } from "lucide-react";
 
 const NAV = [
@@ -20,12 +20,14 @@ const NAV = [
   {
     section: "Platform",
     items: [
-      { to: "/live",          label: "Live Streaming",  icon: Radio },
-      { to: "/marketplace",   label: "Marketplace",     icon: ShoppingBag },
-      { to: "/services",      label: "Services",        icon: Wrench },
-      { to: "/businesses",    label: "Businesses",      icon: Building2 },
-      { to: "/auctions",      label: "Auctions",        icon: Gavel },
-      { to: "/orders",        label: "Orders",          icon: Package },
+      { to: "/live",           label: "Live Streaming",  icon: Radio },
+      { to: "/marketplace",    label: "Marketplace",     icon: ShoppingBag },
+      { to: "/products",       label: "Products",        icon: Tag },
+      { to: "/services",       label: "Services",        icon: Wrench },
+      { to: "/businesses",     label: "Businesses",      icon: Building2 },
+      { to: "/professionals",  label: "Professionals",   icon: Briefcase },
+      { to: "/auctions",       label: "Auctions",        icon: Gavel },
+      { to: "/orders",         label: "Orders",          icon: Package },
     ],
   },
   {
