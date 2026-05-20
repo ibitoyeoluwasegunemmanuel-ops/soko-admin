@@ -16,20 +16,15 @@ import { AppSettings } from "./pages/settings/AppSettings";
 import { SystemLogs } from "./pages/logs/SystemLogs";
 import { Auctions } from "./pages/auctions/Auctions";
 import { League } from "./pages/league/League";
-
-// Stub pages
-import { PageHeader } from "./components/PageHeader";
-
-function Stub({ title, sub }: { title: string; sub?: string }) {
-  return (
-    <div>
-      <PageHeader title={title} sub={sub ?? "Coming soon"} />
-      <div className="flex items-center justify-center py-24 text-white/20 text-sm">
-        This section is being built
-      </div>
-    </div>
-  );
-}
+import { Services } from "./pages/services/Services";
+import { Businesses } from "./pages/businesses/Businesses";
+import { Subscriptions } from "./pages/subscriptions/Subscriptions";
+import { Ads } from "./pages/ads/Ads";
+import { GiftGallery } from "./pages/gift-gallery/GiftGallery";
+import { Verification } from "./pages/verification/Verification";
+import { AISettings } from "./pages/ai-settings/AISettings";
+import { Analytics } from "./pages/analytics/Analytics";
+import { Notifications } from "./pages/notifications/Notifications";
 
 export default function App() {
   return (
@@ -41,25 +36,25 @@ export default function App() {
         <Route path="/creators" element={<Creators />} />
         <Route path="/live" element={<LiveManagement />} />
         <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/services" element={<Stub title="Services" />} />
-        <Route path="/businesses" element={<Stub title="Businesses" />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/businesses" element={<Businesses />} />
         <Route path="/auctions" element={<Auctions />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/wallet" element={<WalletPayments />} />
         <Route path="/payouts" element={<Payouts />} />
         <Route path="/coins-gifts" element={<CoinsGifts />} />
-        <Route path="/subscriptions" element={<Stub title="Subscriptions" />} />
-        <Route path="/ads" element={<Stub title="Ads & Promotions" />} />
+        <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/ads" element={<Ads />} />
         <Route path="/league" element={<League />} />
-        <Route path="/gift-gallery" element={<Stub title="Gift Gallery" />} />
+        <Route path="/gift-gallery" element={<GiftGallery />} />
         <Route path="/moderation" element={<Moderation />} />
-        <Route path="/verification" element={<Stub title="Verification" />} />
-        <Route path="/ai-settings" element={<Stub title="AI Settings" />} />
+        <Route path="/verification" element={<Verification />} />
+        <Route path="/ai-settings" element={<AISettings />} />
         <Route path="/feature-flags" element={<FeatureFlags />} />
         <Route path="/settings" element={<AppSettings />} />
         <Route path="/logs" element={<SystemLogs />} />
-        <Route path="/analytics" element={<Stub title="Analytics" />} />
-        <Route path="/notifications" element={<Stub title="Notifications" />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/notifications" element={<Notifications />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
