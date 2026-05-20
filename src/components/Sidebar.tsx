@@ -3,45 +3,45 @@ import {
   LayoutDashboard, Users, Star, Radio, ShoppingBag,
   Wrench, Building2, Gavel, Package, Wallet,
   ArrowUpFromLine, Gift, Flag, BarChart3, Settings,
-  ScrollText, Shield, Sparkles, Zap, LogOut, ChevronRight,
-  Bell, CreditCard, Trophy, Image
+  ScrollText, Shield, Sparkles, LogOut,
+  Bell, CreditCard, Trophy, ImageIcon, Zap, CheckSquare
 } from "lucide-react";
 import { useAuth } from "../lib/auth";
 
 const NAV = [
-  { section: "Core", items: [
-    { to: "/",               icon: LayoutDashboard, label: "Overview",       key: "overview" },
-    { to: "/users",          icon: Users,           label: "Users",          key: "users" },
-    { to: "/creators",       icon: Star,            label: "Creators",       key: "creators" },
+  { section: "Main Menu", items: [
+    { to: "/",              icon: LayoutDashboard, label: "Overview" },
+    { to: "/users",         icon: Users,           label: "Users" },
+    { to: "/creators",      icon: Star,            label: "Creators" },
+    { to: "/analytics",     icon: BarChart3,       label: "Analytics" },
   ]},
   { section: "Platform", items: [
-    { to: "/live",           icon: Radio,           label: "Live Streaming", key: "live" },
-    { to: "/marketplace",    icon: ShoppingBag,     label: "Marketplace",    key: "marketplace" },
-    { to: "/services",       icon: Wrench,          label: "Services",       key: "services" },
-    { to: "/businesses",     icon: Building2,       label: "Businesses",     key: "businesses" },
-    { to: "/auctions",       icon: Gavel,           label: "Auctions",       key: "auctions" },
-    { to: "/orders",         icon: Package,         label: "Orders",         key: "orders" },
+    { to: "/live",          icon: Radio,           label: "Live Streaming" },
+    { to: "/marketplace",   icon: ShoppingBag,     label: "Marketplace" },
+    { to: "/services",      icon: Wrench,          label: "Services" },
+    { to: "/businesses",    icon: Building2,       label: "Businesses" },
+    { to: "/auctions",      icon: Gavel,           label: "Auctions" },
+    { to: "/orders",        icon: Package,         label: "Orders" },
   ]},
   { section: "Finance", items: [
-    { to: "/wallet",         icon: Wallet,          label: "Wallet & Payments", key: "wallet" },
-    { to: "/payouts",        icon: ArrowUpFromLine, label: "Payouts",        key: "payouts" },
-    { to: "/coins-gifts",    icon: Gift,            label: "Coins & Gifts",  key: "gifts" },
-    { to: "/subscriptions",  icon: CreditCard,      label: "Subscriptions",  key: "subscriptions" },
-    { to: "/ads",            icon: Zap,             label: "Ads & Boost",    key: "ads" },
+    { to: "/wallet",        icon: Wallet,          label: "Wallet & Payments" },
+    { to: "/payouts",       icon: ArrowUpFromLine, label: "Payouts" },
+    { to: "/coins-gifts",   icon: Gift,            label: "Coins & Gifts" },
+    { to: "/subscriptions", icon: CreditCard,      label: "Subscriptions" },
+    { to: "/ads",           icon: Zap,             label: "Ads & Boost" },
   ]},
   { section: "Growth", items: [
-    { to: "/league",         icon: Trophy,          label: "League & Rankings", key: "league" },
-    { to: "/gift-gallery",   icon: Image,           label: "Gift Gallery",   key: "gift-gallery" },
-    { to: "/analytics",      icon: BarChart3,       label: "Analytics",      key: "analytics" },
+    { to: "/league",        icon: Trophy,          label: "League & Rankings" },
+    { to: "/gift-gallery",  icon: ImageIcon,       label: "Gift Gallery" },
   ]},
   { section: "Control", items: [
-    { to: "/moderation",     icon: Shield,          label: "Moderation",     key: "moderation" },
-    { to: "/verification",   icon: Flag,            label: "Verification",   key: "verification" },
-    { to: "/notifications",  icon: Bell,            label: "Notifications",  key: "notifications" },
-    { to: "/ai-settings",    icon: Sparkles,        label: "AI Settings",    key: "ai-settings" },
-    { to: "/feature-flags",  icon: Flag,            label: "Feature Flags",  key: "feature-flags" },
-    { to: "/settings",       icon: Settings,        label: "App Settings",   key: "settings" },
-    { to: "/logs",           icon: ScrollText,      label: "System Logs",    key: "logs" },
+    { to: "/moderation",    icon: Shield,          label: "Moderation" },
+    { to: "/verification",  icon: CheckSquare,     label: "Verification" },
+    { to: "/notifications", icon: Bell,            label: "Notifications" },
+    { to: "/ai-settings",   icon: Sparkles,        label: "AI Settings" },
+    { to: "/feature-flags", icon: Flag,            label: "Feature Flags" },
+    { to: "/settings",      icon: Settings,        label: "App Settings" },
+    { to: "/logs",          icon: ScrollText,      label: "System Logs" },
   ]},
 ];
 
@@ -49,39 +49,49 @@ export function Sidebar() {
   const { admin, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => { logout(); navigate("/login"); };
-
   return (
-    <aside className="fixed left-0 top-0 h-screen w-56 flex flex-col border-r border-[#1e1e2e] bg-[#0d0d16] z-40 overflow-hidden">
-      {/* Logo */}
-      <div className="px-4 py-4 border-b border-[#1e1e2e] flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-sm font-black text-white">S</div>
+    <aside className="fixed left-0 top-0 h-screen flex flex-col bg-[#0d0d18] border-r border-white/[0.06] z-40" style={{ width: 240 }}>
+      {/* Brand */}
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/[0.06]">
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[15px] font-black text-white flex-shrink-0"
+          style={{ background: "linear-gradient(135deg,#7c3aed,#ec4899)" }}>S</div>
         <div>
-          <p className="text-[13px] font-black text-white">Soko Admin</p>
-          <p className="text-[9px] text-purple-400 font-semibold uppercase tracking-wider">{admin?.role?.replace(/_/g," ")}</p>
+          <p className="text-[14px] font-bold text-white leading-tight">Soko Admin</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest mt-0.5" style={{ color: "#a78bfa" }}>
+            {admin?.role?.replace(/_/g, " ")}
+          </p>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
         {NAV.map(group => (
           <div key={group.section}>
-            <p className="text-[9px] font-black text-white/20 uppercase tracking-[2px] px-2 mb-1.5">{group.section}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[1.5px] text-white/25 px-3 mb-2">
+              {group.section}
+            </p>
             <div className="space-y-0.5">
               {group.items.map(item => (
-                <NavLink key={item.to} to={item.to} end={item.to === "/"}
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === "/"}
                   className={({ isActive }) =>
-                    `flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[12px] font-semibold transition-all group ${
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 ${
                       isActive
-                        ? "bg-purple-600/20 text-purple-300 border border-purple-500/25"
-                        : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                        ? "text-white"
+                        : "text-white/40 hover:text-white/75 hover:bg-white/[0.04]"
                     }`
-                  }>
+                  }
+                  style={({ isActive }) => isActive ? {
+                    background: "linear-gradient(135deg,rgba(124,58,237,0.18),rgba(236,72,153,0.06))",
+                    boxShadow: "inset 0 0 0 1px rgba(124,58,237,0.22)"
+                  } : {}}
+                >
                   {({ isActive }) => (
                     <>
-                      <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? "text-purple-400" : ""}`} />
-                      <span className="flex-1 truncate">{item.label}</span>
-                      {isActive && <ChevronRight className="w-3 h-3 text-purple-400/50" />}
+                      <item.icon className="flex-shrink-0" style={{ width: 15, height: 15, color: isActive ? "#a78bfa" : undefined }} />
+                      <span>{item.label}</span>
                     </>
                   )}
                 </NavLink>
@@ -91,20 +101,23 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Admin user */}
-      <div className="px-3 py-3 border-t border-[#1e1e2e]">
-        <div className="flex items-center gap-2.5 mb-2">
-          <div className="w-7 h-7 rounded-full bg-purple-600/30 border border-purple-500/30 flex items-center justify-center text-[10px] font-black text-purple-300">
+      {/* User */}
+      <div className="border-t border-white/[0.06] px-3 py-4 space-y-1">
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black text-white flex-shrink-0"
+            style={{ background: "linear-gradient(135deg,#7c3aed,#ec4899)" }}>
             {admin?.name?.[0] ?? "A"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-bold text-white truncate">{admin?.name}</p>
-            <p className="text-[9px] text-white/30 truncate">{admin?.email}</p>
+            <p className="text-[12px] font-semibold text-white truncate">{admin?.name}</p>
+            <p className="text-[10px] text-white/35 truncate">{admin?.email}</p>
           </div>
         </div>
-        <button onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-all">
-          <LogOut className="w-3.5 h-3.5" />
+        <button
+          onClick={() => { logout(); navigate("/login"); }}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[12px] font-medium text-white/35 hover:text-red-400 hover:bg-red-500/[0.08] transition-all"
+        >
+          <LogOut style={{ width: 14, height: 14 }} />
           Sign out
         </button>
       </div>
