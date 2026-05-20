@@ -1,48 +1,62 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import {
-  LayoutDashboard, Users, Star, Radio, ShoppingBag,
-  Wrench, Building2, Gavel, Package, Wallet,
-  ArrowUpFromLine, Gift, Flag, BarChart3, Settings,
-  ScrollText, Shield, Sparkles, LogOut,
-  Bell, CreditCard, Trophy, ImageIcon, Zap, CheckSquare
-} from "lucide-react";
 import { useAuth } from "../lib/auth";
+import {
+  LayoutDashboard, Users, Star, Radio, ShoppingBag, Wrench, Building2,
+  Gavel, Package, Wallet, ArrowUpFromLine, Gift, CreditCard, Zap,
+  Trophy, ImageIcon, BarChart3, Shield, CheckSquare, Bell, Sparkles,
+  Flag, Settings, ScrollText, LogOut
+} from "lucide-react";
 
 const NAV = [
-  { section: "Main Menu", items: [
-    { to: "/",              icon: LayoutDashboard, label: "Overview" },
-    { to: "/users",         icon: Users,           label: "Users" },
-    { to: "/creators",      icon: Star,            label: "Creators" },
-    { to: "/analytics",     icon: BarChart3,       label: "Analytics" },
-  ]},
-  { section: "Platform", items: [
-    { to: "/live",          icon: Radio,           label: "Live Streaming" },
-    { to: "/marketplace",   icon: ShoppingBag,     label: "Marketplace" },
-    { to: "/services",      icon: Wrench,          label: "Services" },
-    { to: "/businesses",    icon: Building2,       label: "Businesses" },
-    { to: "/auctions",      icon: Gavel,           label: "Auctions" },
-    { to: "/orders",        icon: Package,         label: "Orders" },
-  ]},
-  { section: "Finance", items: [
-    { to: "/wallet",        icon: Wallet,          label: "Wallet & Payments" },
-    { to: "/payouts",       icon: ArrowUpFromLine, label: "Payouts" },
-    { to: "/coins-gifts",   icon: Gift,            label: "Coins & Gifts" },
-    { to: "/subscriptions", icon: CreditCard,      label: "Subscriptions" },
-    { to: "/ads",           icon: Zap,             label: "Ads & Boost" },
-  ]},
-  { section: "Growth", items: [
-    { to: "/league",        icon: Trophy,          label: "League & Rankings" },
-    { to: "/gift-gallery",  icon: ImageIcon,       label: "Gift Gallery" },
-  ]},
-  { section: "Control", items: [
-    { to: "/moderation",    icon: Shield,          label: "Moderation" },
-    { to: "/verification",  icon: CheckSquare,     label: "Verification" },
-    { to: "/notifications", icon: Bell,            label: "Notifications" },
-    { to: "/ai-settings",   icon: Sparkles,        label: "AI Settings" },
-    { to: "/feature-flags", icon: Flag,            label: "Feature Flags" },
-    { to: "/settings",      icon: Settings,        label: "App Settings" },
-    { to: "/logs",          icon: ScrollText,      label: "System Logs" },
-  ]},
+  {
+    section: "Main Menu",
+    items: [
+      { to: "/",              label: "Dashboard",       icon: LayoutDashboard },
+      { to: "/users",         label: "Users",           icon: Users },
+      { to: "/creators",      label: "Creators",        icon: Star },
+      { to: "/analytics",     label: "Analytics",       icon: BarChart3 },
+    ],
+  },
+  {
+    section: "Platform",
+    items: [
+      { to: "/live",          label: "Live Streaming",  icon: Radio },
+      { to: "/marketplace",   label: "Marketplace",     icon: ShoppingBag },
+      { to: "/services",      label: "Services",        icon: Wrench },
+      { to: "/businesses",    label: "Businesses",      icon: Building2 },
+      { to: "/auctions",      label: "Auctions",        icon: Gavel },
+      { to: "/orders",        label: "Orders",          icon: Package },
+    ],
+  },
+  {
+    section: "Finance",
+    items: [
+      { to: "/wallet",        label: "Wallet & Payments", icon: Wallet },
+      { to: "/payouts",       label: "Payouts",         icon: ArrowUpFromLine },
+      { to: "/coins-gifts",   label: "Coins & Gifts",   icon: Gift },
+      { to: "/subscriptions", label: "Subscriptions",   icon: CreditCard },
+      { to: "/ads",           label: "Ads & Boost",     icon: Zap },
+    ],
+  },
+  {
+    section: "Growth",
+    items: [
+      { to: "/league",        label: "League",          icon: Trophy },
+      { to: "/gift-gallery",  label: "Gift Gallery",    icon: ImageIcon },
+    ],
+  },
+  {
+    section: "Control",
+    items: [
+      { to: "/moderation",    label: "Moderation",      icon: Shield },
+      { to: "/verification",  label: "Verification",    icon: CheckSquare },
+      { to: "/notifications", label: "Notifications",   icon: Bell },
+      { to: "/ai-settings",   label: "AI Settings",     icon: Sparkles },
+      { to: "/feature-flags", label: "Feature Flags",   icon: Flag },
+      { to: "/settings",      label: "Settings",        icon: Settings },
+      { to: "/logs",          label: "System Logs",     icon: ScrollText },
+    ],
+  },
 ];
 
 export function Sidebar() {
@@ -50,49 +64,64 @@ export function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen flex flex-col bg-[#0d0d18] border-r border-white/[0.06] z-40" style={{ width: 240 }}>
-      {/* Brand */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/[0.06]">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[15px] font-black text-white flex-shrink-0"
-          style={{ background: "linear-gradient(135deg,#7c3aed,#ec4899)" }}>S</div>
-        <div>
-          <p className="text-[14px] font-bold text-white leading-tight">Soko Admin</p>
-          <p className="text-[10px] font-semibold uppercase tracking-widest mt-0.5" style={{ color: "#a78bfa" }}>
-            {admin?.role?.replace(/_/g, " ")}
-          </p>
+    <aside style={{
+      position: "fixed", top: 0, left: 0, bottom: 0, width: 260,
+      display: "flex", flexDirection: "column",
+      background: "var(--surface)", borderRight: "1px solid var(--border)",
+      zIndex: 50,
+    }}>
+      {/* Logo */}
+      <div style={{ padding: "20px 20px 18px", borderBottom: "1px solid var(--border)", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{
+            width: 38, height: 38, borderRadius: 12, flexShrink: 0,
+            background: "linear-gradient(135deg,#7c3aed,#ec4899)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 18, fontWeight: 900, color: "#fff",
+          }}>S</div>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", lineHeight: 1.2 }}>Soko Admin</div>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "var(--accent2)", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>
+              {admin?.role?.replace(/_/g, " ")}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+      {/* Navigation */}
+      <nav style={{ flex: 1, overflowY: "auto", padding: "12px 12px", display: "flex", flexDirection: "column", gap: 20 }}>
         {NAV.map(group => (
           <div key={group.section}>
-            <p className="text-[10px] font-bold uppercase tracking-[1.5px] text-white/25 px-3 mb-2">
+            <div style={{
+              fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+              color: "rgba(240,242,255,0.25)", padding: "0 10px", marginBottom: 6,
+            }}>
               {group.section}
-            </p>
-            <div className="space-y-0.5">
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {group.items.map(item => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 ${
-                      isActive
-                        ? "text-white"
-                        : "text-white/40 hover:text-white/75 hover:bg-white/[0.04]"
-                    }`
-                  }
-                  style={({ isActive }) => isActive ? {
-                    background: "linear-gradient(135deg,rgba(124,58,237,0.18),rgba(236,72,153,0.06))",
-                    boxShadow: "inset 0 0 0 1px rgba(124,58,237,0.22)"
-                  } : {}}
-                >
+                <NavLink key={item.to} to={item.to} end={item.to === "/"}>
                   {({ isActive }) => (
-                    <>
-                      <item.icon className="flex-shrink-0" style={{ width: 15, height: 15, color: isActive ? "#a78bfa" : undefined }} />
-                      <span>{item.label}</span>
-                    </>
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      padding: "8px 10px", borderRadius: 10, cursor: "pointer",
+                      fontSize: 13, fontWeight: isActive ? 600 : 450,
+                      color: isActive ? "#fff" : "rgba(240,242,255,0.45)",
+                      background: isActive
+                        ? "linear-gradient(135deg,rgba(124,58,237,0.2),rgba(236,72,153,0.08))"
+                        : "transparent",
+                      boxShadow: isActive ? "inset 0 0 0 1px rgba(124,58,237,0.25)" : "none",
+                      transition: "all 0.12s ease",
+                    }}
+                      onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.04)"; (e.currentTarget as HTMLDivElement).style.color = "rgba(240,242,255,0.75)"; }}
+                      onMouseLeave={e => { if (!isActive) { (e.currentTarget as HTMLDivElement).style.background = "transparent"; (e.currentTarget as HTMLDivElement).style.color = "rgba(240,242,255,0.45)"; } }}
+                    >
+                      <item.icon
+                        size={15}
+                        style={{ flexShrink: 0, color: isActive ? "#a78bfa" : undefined }}
+                      />
+                      <span style={{ lineHeight: 1 }}>{item.label}</span>
+                    </div>
                   )}
                 </NavLink>
               ))}
@@ -101,23 +130,42 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* User */}
-      <div className="border-t border-white/[0.06] px-3 py-4 space-y-1">
-        <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black text-white flex-shrink-0"
-            style={{ background: "linear-gradient(135deg,#7c3aed,#ec4899)" }}>
+      {/* User footer */}
+      <div style={{ padding: "12px", borderTop: "1px solid var(--border)", flexShrink: 0 }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10,
+          padding: "10px", borderRadius: 12, marginBottom: 4,
+          background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)",
+        }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+            background: "linear-gradient(135deg,#7c3aed,#ec4899)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 13, fontWeight: 800, color: "#fff",
+          }}>
             {admin?.name?.[0] ?? "A"}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-semibold text-white truncate">{admin?.name}</p>
-            <p className="text-[10px] text-white/35 truncate">{admin?.email}</p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {admin?.name}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {admin?.email}
+            </div>
           </div>
         </div>
         <button
           onClick={() => { logout(); navigate("/login"); }}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[12px] font-medium text-white/35 hover:text-red-400 hover:bg-red-500/[0.08] transition-all"
+          style={{
+            width: "100%", display: "flex", alignItems: "center", gap: 8,
+            padding: "7px 10px", borderRadius: 8, border: "none", cursor: "pointer",
+            fontSize: 12, fontWeight: 500, color: "rgba(240,242,255,0.3)",
+            background: "transparent", transition: "all 0.12s",
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = "#ef4444"; (e.currentTarget as HTMLButtonElement).style.background = "rgba(239,68,68,0.08)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = "rgba(240,242,255,0.3)"; (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
         >
-          <LogOut style={{ width: 14, height: 14 }} />
+          <LogOut size={13} />
           Sign out
         </button>
       </div>

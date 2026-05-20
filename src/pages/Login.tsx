@@ -1,78 +1,166 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
-import { Eye, EyeOff, Lock, Mail, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export function Login() {
   const { login, admin } = useAuth();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (admin) return <Navigate to="/" replace />;
-  const [email, setEmail]       = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw]     = useState(false);
-  const [error, setError]       = useState("");
-  const [loading, setLoading]   = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(""); setLoading(true);
+    setError("");
+    setLoading(true);
     const ok = await login(email, password);
     setLoading(false);
     if (ok) navigate("/");
-    else setError("Invalid credentials. Try admin@soko.app / soko2026");
+    else setError("Invalid email or password");
   }
 
+  const inputStyle = {
+    width: "100%", height: 46, padding: "0 14px",
+    borderRadius: 12, border: "1px solid var(--border2)",
+    background: "var(--bg)", color: "var(--text)",
+    fontSize: 14, outline: "none",
+    transition: "border-color 0.15s",
+  } as React.CSSProperties;
+
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div style={{
+      minHeight: "100vh", background: "var(--bg)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "24px",
+      position: "relative", overflow: "hidden",
+    }}>
+      {/* Background accents */}
+      <div style={{
+        position: "absolute", top: -200, right: -200,
+        width: 500, height: 500, borderRadius: "50%",
+        background: "rgba(124,58,237,0.08)", filter: "blur(80px)", pointerEvents: "none",
+      }} />
+      <div style={{
+        position: "absolute", bottom: -150, left: -150,
+        width: 400, height: 400, borderRadius: "50%",
+        background: "rgba(236,72,153,0.06)", filter: "blur(80px)", pointerEvents: "none",
+      }} />
+
+      <div style={{ width: "100%", maxWidth: 400, position: "relative" }}>
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-2xl font-black text-white mx-auto mb-3">S</div>
-          <h1 className="text-[22px] font-black text-white">Soko Admin</h1>
-          <p className="text-[12px] text-white/30 mt-1">Platform control center</p>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: 18, margin: "0 auto 16px",
+            background: "linear-gradient(135deg,#7c3aed,#ec4899)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 24, fontWeight: 900, color: "#fff",
+            boxShadow: "0 20px 40px rgba(124,58,237,0.3)",
+          }}>S</div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: "var(--text)", letterSpacing: "-0.5px" }}>
+            Soko Admin
+          </h1>
+          <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 6 }}>
+            Sign in to your admin account
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-[#12121c] border border-[#1e1e2e] rounded-2xl p-6 space-y-4">
+        {/* Card */}
+        <div style={{
+          background: "var(--surface)", borderRadius: 20,
+          border: "1px solid var(--border)", padding: 28,
+        }}>
           {error && (
-            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/25 rounded-xl px-3 py-2.5">
-              <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <p className="text-[11px] text-red-300">{error}</p>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "12px 14px", borderRadius: 12, marginBottom: 20,
+              background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)",
+            }}>
+              <AlertCircle size={15} style={{ color: "#ef4444", flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: "#fca5a5" }}>{error}</span>
             </div>
           )}
 
-          <div>
-            <label className="text-[11px] text-white/40 font-bold uppercase tracking-wider block mb-1.5">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--muted)", marginBottom: 8 }}>
+                Email address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="admin@soko.app"
-                className="w-full bg-[#0a0a0f] border border-[#2a2a3e] rounded-xl pl-10 pr-4 py-3 text-[13px] text-white placeholder-white/20 focus:outline-none focus:border-purple-500/60" />
+                required
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = "rgba(124,58,237,0.6)")}
+                onBlur={e => (e.target.style.borderColor = "var(--border2)")}
+              />
             </div>
-          </div>
 
-          <div>
-            <label className="text-[11px] text-white/40 font-bold uppercase tracking-wider block mb-1.5">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-              <input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} required
-                placeholder="••••••••"
-                className="w-full bg-[#0a0a0f] border border-[#2a2a3e] rounded-xl pl-10 pr-10 py-3 text-[13px] text-white placeholder-white/20 focus:outline-none focus:border-purple-500/60" />
-              <button type="button" onClick={() => setShowPw(v => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
-                {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+            <div>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--muted)", marginBottom: 8 }}>
+                Password
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showPw ? "text" : "password"}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                  style={{ ...inputStyle, paddingRight: 44 }}
+                  onFocus={e => (e.target.style.borderColor = "rgba(124,58,237,0.6)")}
+                  onBlur={e => (e.target.style.borderColor = "var(--border2)")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw(v => !v)}
+                  style={{
+                    position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+                    background: "none", border: "none", cursor: "pointer",
+                    color: "var(--muted)", padding: 0, display: "flex",
+                  }}
+                >
+                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%", height: 46, borderRadius: 12, border: "none",
+                background: loading ? "rgba(124,58,237,0.5)" : "linear-gradient(135deg,#7c3aed,#ec4899)",
+                color: "#fff", fontSize: 14, fontWeight: 700,
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "opacity 0.15s, transform 0.15s",
+                boxShadow: "0 4px 20px rgba(124,58,237,0.25)",
+                marginTop: 4,
+              }}
+            >
+              {loading ? "Signing in…" : "Sign In"}
+            </button>
+          </form>
+
+          {/* Hint */}
+          <div style={{
+            marginTop: 20, padding: "12px 14px", borderRadius: 10,
+            background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)",
+          }}>
+            <p style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Demo credentials</p>
+            <p style={{ fontSize: 12, color: "rgba(167,139,250,0.8)", fontFamily: "monospace" }}>
+              admin@soko.app / soko2026
+            </p>
           </div>
+        </div>
 
-          <button type="submit" disabled={loading}
-            className="w-full py-3 rounded-xl font-black text-[13px] text-white disabled:opacity-50 transition-all"
-            style={{ background: "linear-gradient(135deg,#7c3aed,#ec4899)" }}>
-            {loading ? "Signing in…" : "Sign In"}
-          </button>
-        </form>
-
-        <p className="text-center text-[10px] text-white/15 mt-4">
+        <p style={{ textAlign: "center", fontSize: 11, color: "rgba(240,242,255,0.15)", marginTop: 20 }}>
           Authorised personnel only · Soko Platform v2.0
         </p>
       </div>
