@@ -1,257 +1,324 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabase";
 import { PageHeader } from "../../components/PageHeader";
-import { Save, Settings } from "lucide-react";
+import { Globe, DollarSign, Percent, Bell, Shield, Save, CheckCircle } from "lucide-react";
 
-interface Toast { id: string; msg: string; }
+type Tab = "commission" | "countries" | "currencies" | "withdrawal" | "notifications" | "content";
 
-interface CommissionConfig {
-  marketplace_pct: string;
-  gift_platform_split: string;
-  live_earning_split: string;
-}
+const COUNTRIES = [
+  { code: "NG", name: "Nigeria",      flag: "🇳🇬", currency: "NGN" },
+  { code: "GH", name: "Ghana",        flag: "🇬🇭", currency: "GHS" },
+  { code: "KE", name: "Kenya",        flag: "🇰🇪", currency: "KES" },
+  { code: "ZA", name: "South Africa", flag: "🇿🇦", currency: "ZAR" },
+  { code: "UG", name: "Uganda",       flag: "🇺🇬", currency: "UGX" },
+  { code: "TZ", name: "Tanzania",     flag: "🇹🇿", currency: "TZS" },
+  { code: "RW", name: "Rwanda",       flag: "🇷🇼", currency: "RWF" },
+  { code: "ET", name: "Ethiopia",     flag: "🇪🇹", currency: "ETB" },
+  { code: "CM", name: "Cameroon",     flag: "🇨🇲", currency: "XAF" },
+  { code: "SN", name: "Senegal",      flag: "🇸🇳", currency: "XOF" },
+  { code: "GB", name: "UK",           flag: "🇬🇧", currency: "GBP" },
+  { code: "US", name: "USA",          flag: "🇺🇸", currency: "USD" },
+];
 
-interface WithdrawalConfig {
-  min_amount: string;
-  pending_period_days: string;
-}
-
-interface PlatformRules {
-  max_live_duration_hours: string;
-  max_products_per_seller: string;
-  max_auction_days: string;
-  kyc_threshold_naira: string;
-}
+const inputSt = { width: "100%", height: 42, padding: "0 14px", borderRadius: 10, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", fontSize: 14, outline: "none" } as React.CSSProperties;
 
 export function AppSettings() {
-  const [commission, setCommission] = useState<CommissionConfig>({
-    marketplace_pct:    "10",
-    gift_platform_split:"30",
-    live_earning_split: "20",
-  });
-
-  const [withdrawal, setWithdrawal] = useState<WithdrawalConfig>({
-    min_amount:          "1000",
-    pending_period_days: "3",
-  });
-
-  const [rules, setRules] = useState<PlatformRules>({
-    max_live_duration_hours: "8",
-    max_products_per_seller: "200",
-    max_auction_days:        "7",
-    kyc_threshold_naira:     "50000",
-  });
-
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [tab, setTab]       = useState<Tab>("commission");
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved]   = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  function addToast(msg: string) {
-    const id = Math.random().toString(36).slice(2);
-    setToasts(prev => [...prev, { id, msg }]);
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
-  }
+  const [enabledCountries, setEnabledCountries] = useState<string[]>(["NG"]);
+  const [baseCurrency, setBaseCurrency] = useState("NGN");
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({ USD: 0.00065, GBP: 0.00053, GHS: 0.0089 });
 
-  async function save(section: string) {
+  const [commission, setCommission] = useState({
+    marketplace: 10, services: 15, auctions: 8,
+    live_gifts: 30, subscriptions: 20, ads: 100,
+  });
+
+  const [withdrawal, setWithdrawal] = useState({
+    min_ngn: 1000, max_ngn: 5000000,
+    pending_days: 3, kyc_threshold: 50000,
+    daily_limit: 500000, weekly_limit: 2000000,
+  });
+
+  const [notifications, setNotifications] = useState({
+    push_enabled: true, email_enabled: true, sms_enabled: false,
+    order_updates: true, live_alerts: true, promo_messages: true,
+    payment_alerts: true, security_alerts: true,
+  });
+
+  const [content, setContent] = useState({
+    min_age: 13, adult_content: false,
+    max_video_mb: 500, max_image_mb: 20,
+    auto_moderation: true, nsfw_detection: true,
+    max_live_hours: 8, max_caption_length: 2200,
+  });
+
+  useEffect(() => {
+    async function load() {
+      const { data } = await supabase.from("app_config").select("key,value")
+        .in("key", ["enabled_countries","base_currency","exchange_rates","commission_config","withdrawal_config","notification_config","content_config"]);
+      for (const c of data ?? []) {
+        try {
+          const v = JSON.parse(c.value);
+          if (c.key === "enabled_countries") setEnabledCountries(v);
+          if (c.key === "base_currency") setBaseCurrency(c.value);
+          if (c.key === "exchange_rates") setExchangeRates(v);
+          if (c.key === "commission_config") setCommission(v);
+          if (c.key === "withdrawal_config") setWithdrawal(v);
+          if (c.key === "notification_config") setNotifications(v);
+          if (c.key === "content_config") setContent(v);
+        } catch {}
+      }
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  async function save(key: string, value: any, label: string) {
     setSaving(true);
-    await new Promise(r => setTimeout(r, 500));
-    setSaving(false);
-    addToast(`${section} saved successfully`);
+    await supabase.from("app_config").upsert({ key, value: typeof value === "string" ? value : JSON.stringify(value) });
+    setSaving(false); setSaved(label); setTimeout(() => setSaved(null), 2500);
   }
+
+  function toggleCountry(code: string) {
+    setEnabledCountries(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]);
+  }
+
+  const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
+    { key: "commission",    label: "Commission",    icon: <Percent size={14} /> },
+    { key: "countries",     label: "Countries",     icon: <Globe size={14} /> },
+    { key: "currencies",    label: "Currencies",    icon: <DollarSign size={14} /> },
+    { key: "withdrawal",    label: "Withdrawals",   icon: <DollarSign size={14} /> },
+    { key: "notifications", label: "Notifications", icon: <Bell size={14} /> },
+    { key: "content",       label: "Content Rules", icon: <Shield size={14} /> },
+  ];
+
+  const SaveBtn = ({ configKey, value, label }: { configKey: string; value: any; label: string }) => (
+    <button onClick={() => save(configKey, value, label)} disabled={saving}
+      style={{ padding: "8px 18px", borderRadius: 10, border: "none", display: "flex", alignItems: "center", gap: 6, background: saved === label ? "#10b981" : "#7c3aed", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }}>
+      {saved === label ? <><CheckCircle size={13} /> Saved!</> : saving ? "Saving…" : <><Save size={13} /> Save</>}
+    </button>
+  );
+
+  const NumField = ({ label, hint, value, onChange, prefix }: { label: string; hint?: string; value: number; onChange: (v: number) => void; prefix?: string }) => (
+    <div>
+      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>{label}</label>
+      <div style={{ position: "relative" }}>
+        {prefix && <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "var(--muted)", fontSize: 13, pointerEvents: "none" }}>{prefix}</span>}
+        <input type="number" value={value} onChange={e => onChange(Number(e.target.value))} style={{ ...inputSt, paddingLeft: prefix ? 30 : 14 }} />
+      </div>
+      {hint && <p style={{ fontSize: 11, color: "rgba(240,242,255,0.2)", marginTop: 4 }}>{hint}</p>}
+    </div>
+  );
+
+  const Toggle = ({ label, hint, value, onChange }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void }) => (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 12, background: "var(--bg)", border: "1px solid var(--border)" }}>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{label}</div>
+        {hint && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{hint}</div>}
+      </div>
+      <button onClick={() => onChange(!value)} style={{
+        width: 44, height: 24, borderRadius: 99, border: "none", cursor: "pointer",
+        background: value ? "#7c3aed" : "rgba(255,255,255,0.1)",
+        position: "relative", transition: "background 0.2s",
+      }}>
+        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, left: value ? 23 : 3, transition: "left 0.2s", boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }} />
+      </button>
+    </div>
+  );
+
+  const Card = ({ title, children, onSave, configKey, value, label }: { title: string; children: React.ReactNode; onSave?: () => void; configKey?: string; value?: any; label?: string }) => (
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+        <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>{title}</p>
+        {configKey && <SaveBtn configKey={configKey} value={value} label={label!} />}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{children}</div>
+    </div>
+  );
 
   return (
     <div>
-      {/* Toasts */}
-      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2">
-        {toasts.map(t => (
-          <div key={t.id} className="px-4 py-3 rounded-xl border bg-emerald-900/80 border-emerald-500/30 text-emerald-300 text-[12px] font-semibold shadow-2xl">
-            {t.msg}
-          </div>
-        ))}
-      </div>
+      <PageHeader title="App Settings" sub="Countries, currencies, commission rates, withdrawal rules and content policies" />
 
-      <PageHeader title="App Settings" sub="Platform configuration & rules">
-        <div className="flex items-center gap-1.5 text-[11px] text-white/30">
-          <Settings className="w-3.5 h-3.5" />
-          Super Admin only
-        </div>
-      </PageHeader>
-
-      <div className="p-6 space-y-6 max-w-3xl">
-        {/* Commission Rates */}
-        <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <p className="text-[14px] font-black text-white">Commission Rates</p>
-              <p className="text-[12px] text-white/30 mt-0.5">Platform revenue share settings</p>
-            </div>
-            <button
-              onClick={() => save("Commission rates")}
-              disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#7c3aed] text-white hover:bg-purple-600 transition-all disabled:opacity-60"
-            >
-              <Save className="w-3.5 h-3.5" />
-              Save
+      <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 24 }}>
+        {/* Tab bar */}
+        <div style={{ display: "flex", gap: 4, background: "var(--bg)", border: "1px solid var(--border)", borderRadius: 12, padding: 4, width: "fit-content", flexWrap: "wrap" }}>
+          {TABS.map(t => (
+            <button key={t.key} onClick={() => setTab(t.key)} style={{
+              padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+              fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6,
+              background: tab === t.key ? "#7c3aed" : "transparent",
+              color: tab === t.key ? "#fff" : "var(--muted)",
+            }}>
+              {t.icon} {t.label}
             </button>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-[11px] font-black text-white/40 uppercase tracking-wider mb-1.5">
-                Marketplace Commission (%)
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="number"
-                  min={0} max={100}
-                  value={commission.marketplace_pct}
-                  onChange={e => setCommission(p => ({ ...p, marketplace_pct: e.target.value }))}
-                  className="w-28 bg-[#0a0a0f] border border-[#2a2a3e] rounded-lg px-3 py-2 text-[14px] font-black text-white focus:outline-none focus:border-purple-500/50 text-center"
-                />
-                <div className="flex-1 h-2 bg-[#1e1e2e] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#7c3aed] rounded-full transition-all"
-                    style={{ width: `${Math.min(100, Number(commission.marketplace_pct))}%` }}
-                  />
-                </div>
-                <span className="text-[13px] font-black text-white/60">{commission.marketplace_pct}%</span>
-              </div>
-              <p className="text-[11px] text-white/25 mt-1">Soko takes this % from every product sale</p>
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-black text-white/40 uppercase tracking-wider mb-1.5">
-                Gift Platform Split (%)
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="number"
-                  min={0} max={100}
-                  value={commission.gift_platform_split}
-                  onChange={e => setCommission(p => ({ ...p, gift_platform_split: e.target.value }))}
-                  className="w-28 bg-[#0a0a0f] border border-[#2a2a3e] rounded-lg px-3 py-2 text-[14px] font-black text-white focus:outline-none focus:border-purple-500/50 text-center"
-                />
-                <div className="flex-1 h-2 bg-[#1e1e2e] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-pink-500 rounded-full transition-all"
-                    style={{ width: `${Math.min(100, Number(commission.gift_platform_split))}%` }}
-                  />
-                </div>
-                <span className="text-[13px] font-black text-white/60">{commission.gift_platform_split}%</span>
-              </div>
-              <p className="text-[11px] text-white/25 mt-1">Soko retains this % of all gifts sent</p>
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-black text-white/40 uppercase tracking-wider mb-1.5">
-                Live Earning Split (%)
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="number"
-                  min={0} max={100}
-                  value={commission.live_earning_split}
-                  onChange={e => setCommission(p => ({ ...p, live_earning_split: e.target.value }))}
-                  className="w-28 bg-[#0a0a0f] border border-[#2a2a3e] rounded-lg px-3 py-2 text-[14px] font-black text-white focus:outline-none focus:border-purple-500/50 text-center"
-                />
-                <div className="flex-1 h-2 bg-[#1e1e2e] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-emerald-500 rounded-full transition-all"
-                    style={{ width: `${Math.min(100, Number(commission.live_earning_split))}%` }}
-                  />
-                </div>
-                <span className="text-[13px] font-black text-white/60">{commission.live_earning_split}%</span>
-              </div>
-              <p className="text-[11px] text-white/25 mt-1">Soko takes this % of live stream earnings</p>
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Withdrawal Limits */}
-        <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <p className="text-[14px] font-black text-white">Withdrawal Limits</p>
-              <p className="text-[12px] text-white/30 mt-0.5">Payout restrictions & holding periods</p>
-            </div>
-            <button
-              onClick={() => save("Withdrawal limits")}
-              disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#7c3aed] text-white hover:bg-purple-600 transition-all disabled:opacity-60"
-            >
-              <Save className="w-3.5 h-3.5" />
-              Save
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[11px] font-black text-white/40 uppercase tracking-wider mb-1.5">
-                Minimum Withdrawal (₦)
-              </label>
-              <input
-                type="number"
-                min={0}
-                value={withdrawal.min_amount}
-                onChange={e => setWithdrawal(p => ({ ...p, min_amount: e.target.value }))}
-                className="w-full bg-[#0a0a0f] border border-[#2a2a3e] rounded-lg px-3 py-2.5 text-[14px] font-black text-white focus:outline-none focus:border-purple-500/50"
-              />
-              <p className="text-[11px] text-white/25 mt-1">Minimum amount users can withdraw</p>
-            </div>
-            <div>
-              <label className="block text-[11px] font-black text-white/40 uppercase tracking-wider mb-1.5">
-                Pending Period (days)
-              </label>
-              <input
-                type="number"
-                min={0}
-                value={withdrawal.pending_period_days}
-                onChange={e => setWithdrawal(p => ({ ...p, pending_period_days: e.target.value }))}
-                className="w-full bg-[#0a0a0f] border border-[#2a2a3e] rounded-lg px-3 py-2.5 text-[14px] font-black text-white focus:outline-none focus:border-purple-500/50"
-              />
-              <p className="text-[11px] text-white/25 mt-1">Days funds are held before withdrawal</p>
+        {/* COMMISSION */}
+        {tab === "commission" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Card title="Platform Commission Rates (%)" configKey="commission_config" value={commission} label="Commission">
+              {[
+                { key: "marketplace" as const, label: "Marketplace Sales",     hint: "% taken from every product sold" },
+                { key: "services"   as const, label: "Service Payments",       hint: "% taken from service transactions" },
+                { key: "auctions"   as const, label: "Auction Winnings",       hint: "% taken from winning bid amount" },
+                { key: "live_gifts" as const, label: "Live Gifts (Platform)",  hint: "% Soko retains from all gifts" },
+                { key: "subscriptions" as const, label: "Subscriptions",       hint: "% Soko takes from subscription revenue" },
+              ].map(f => (
+                <div key={f.key}>
+                  <NumField label={f.label} hint={f.hint} value={commission[f.key]} onChange={v => setCommission(p => ({ ...p, [f.key]: v }))} />
+                  <div style={{ marginTop: 6, height: 4, background: "var(--bg)", borderRadius: 99, overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 99, background: "#7c3aed", width: `${Math.min(100, commission[f.key])}%`, transition: "width 0.3s" }} />
+                  </div>
+                </div>
+              ))}
+            </Card>
+            <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 24 }}>
+              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 20 }}>Revenue Preview</p>
+              {[
+                { label: "Sell ₦10,000 product", result: `₦${(10000 * commission.marketplace / 100).toLocaleString()} to Soko`, color: "#7c3aed" },
+                { label: "Send 1,000 coin gift", result: `${commission.live_gifts}% platform split`, color: "#ec4899" },
+                { label: "Book ₦5,000 service", result: `₦${(5000 * commission.services / 100).toLocaleString()} to Soko`, color: "#3b82f6" },
+                { label: "Win ₦50,000 auction", result: `₦${(50000 * commission.auctions / 100).toLocaleString()} to Soko`, color: "#f59e0b" },
+                { label: "₦2,000/mo subscription", result: `₦${(2000 * commission.subscriptions / 100).toLocaleString()} to Soko`, color: "#10b981" },
+              ].map(r => (
+                <div key={r.label} style={{ display: "flex", justifyContent: "space-between", padding: "11px 14px", borderRadius: 10, background: "var(--bg)", border: "1px solid var(--border)", marginBottom: 8 }}>
+                  <span style={{ fontSize: 12, color: "var(--muted)" }}>{r.label}</span>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: r.color }}>{r.result}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Platform Rules */}
-        <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <p className="text-[14px] font-black text-white">Platform Rules</p>
-              <p className="text-[12px] text-white/30 mt-0.5">Operational limits & thresholds</p>
-            </div>
-            <button
-              onClick={() => save("Platform rules")}
-              disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#7c3aed] text-white hover:bg-purple-600 transition-all disabled:opacity-60"
-            >
-              <Save className="w-3.5 h-3.5" />
-              Save
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { key: "max_live_duration_hours", label: "Max Live Duration (hours)", hint: "Maximum hours a single live stream can run" },
-              { key: "max_products_per_seller", label: "Max Products Per Seller",   hint: "Product listing limit per vendor account" },
-              { key: "max_auction_days",         label: "Max Auction Duration (days)", hint: "Maximum days an auction can run" },
-              { key: "kyc_threshold_naira",      label: "KYC Required Threshold (₦)", hint: "Require KYC above this earnings amount" },
-            ].map(field => (
-              <div key={field.key}>
-                <label className="block text-[11px] font-black text-white/40 uppercase tracking-wider mb-1.5">
-                  {field.label}
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  value={(rules as any)[field.key]}
-                  onChange={e => setRules(p => ({ ...p, [field.key]: e.target.value }))}
-                  className="w-full bg-[#0a0a0f] border border-[#2a2a3e] rounded-lg px-3 py-2.5 text-[14px] font-black text-white focus:outline-none focus:border-purple-500/50"
-                />
-                <p className="text-[11px] text-white/25 mt-1">{field.hint}</p>
+        {/* COUNTRIES */}
+        {tab === "countries" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>Enabled Countries</p>
+                  <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>{enabledCountries.length} of {COUNTRIES.length} countries active</p>
+                </div>
+                <SaveBtn configKey="enabled_countries" value={enabledCountries} label="Countries" />
               </div>
-            ))}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
+                {COUNTRIES.map(c => {
+                  const on = enabledCountries.includes(c.code);
+                  return (
+                    <button key={c.code} onClick={() => toggleCountry(c.code)} style={{
+                      display: "flex", alignItems: "center", gap: 12, padding: "12px 16px",
+                      borderRadius: 12, border: `1px solid ${on ? "rgba(124,58,237,0.35)" : "var(--border)"}`,
+                      background: on ? "rgba(124,58,237,0.08)" : "var(--bg)",
+                      cursor: "pointer", textAlign: "left", transition: "all 0.15s",
+                    }}>
+                      <span style={{ fontSize: 22 }}>{c.flag}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: on ? "var(--text)" : "var(--muted)" }}>{c.name}</div>
+                        <div style={{ fontSize: 11, color: "var(--muted)" }}>{c.currency}</div>
+                      </div>
+                      <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${on ? "#7c3aed" : "var(--border)"}`, background: on ? "#7c3aed" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        {on && <CheckCircle size={10} style={{ color: "#fff" }} />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* CURRENCIES */}
+        {tab === "currencies" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Card title="Base Currency" configKey="base_currency" value={baseCurrency} label="Base Currency">
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Base Currency</label>
+                <select value={baseCurrency} onChange={e => setBaseCurrency(e.target.value)} style={{ ...inputSt, height: 44 }}>
+                  {["NGN","GHS","KES","ZAR","USD","GBP"].map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <p style={{ fontSize: 11, color: "rgba(240,242,255,0.2)", marginTop: 4 }}>All prices and payouts are in this currency</p>
+              </div>
+            </Card>
+            <Card title="Exchange Rates (to {baseCurrency})" configKey="exchange_rates" value={exchangeRates} label="Exchange Rates">
+              {Object.entries(exchangeRates).map(([cur, rate]) => (
+                <div key={cur}>
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>1 {baseCurrency} = ? {cur}</label>
+                  <input type="number" step="0.000001" value={rate}
+                    onChange={e => setExchangeRates(p => ({ ...p, [cur]: Number(e.target.value) }))}
+                    style={inputSt} />
+                </div>
+              ))}
+            </Card>
+          </div>
+        )}
+
+        {/* WITHDRAWAL */}
+        {tab === "withdrawal" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Card title="Withdrawal Limits" configKey="withdrawal_config" value={withdrawal} label="Withdrawal">
+              <NumField label="Minimum Withdrawal (₦)" hint="Users can't withdraw below this amount" value={withdrawal.min_ngn} onChange={v => setWithdrawal(p => ({ ...p, min_ngn: v }))} prefix="₦" />
+              <NumField label="Maximum Single Withdrawal (₦)" hint="Cap per withdrawal request" value={withdrawal.max_ngn} onChange={v => setWithdrawal(p => ({ ...p, max_ngn: v }))} prefix="₦" />
+              <NumField label="Daily Withdrawal Limit (₦)" hint="Total user can withdraw in 24h" value={withdrawal.daily_limit} onChange={v => setWithdrawal(p => ({ ...p, daily_limit: v }))} prefix="₦" />
+              <NumField label="Weekly Withdrawal Limit (₦)" hint="Total user can withdraw in 7 days" value={withdrawal.weekly_limit} onChange={v => setWithdrawal(p => ({ ...p, weekly_limit: v }))} prefix="₦" />
+            </Card>
+            <Card title="Payout Timing" configKey="withdrawal_config" value={withdrawal} label="Timing">
+              <NumField label="Pending Period (days)" hint="Days funds are held before available to withdraw" value={withdrawal.pending_days} onChange={v => setWithdrawal(p => ({ ...p, pending_days: v }))} />
+              <NumField label="KYC Required Above (₦)" hint="KYC/ID verification required above this earnings" value={withdrawal.kyc_threshold} onChange={v => setWithdrawal(p => ({ ...p, kyc_threshold: v }))} prefix="₦" />
+              <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)" }}>
+                <p style={{ fontSize: 12, color: "#a78bfa", lineHeight: 1.6 }}>
+                  Funds earned are held for {withdrawal.pending_days} days before becoming withdrawable. Users earning above ₦{withdrawal.kyc_threshold.toLocaleString()} must complete KYC before withdrawing.
+                </p>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* NOTIFICATIONS */}
+        {tab === "notifications" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Card title="Notification Channels" configKey="notification_config" value={notifications} label="Notification Channels">
+              <Toggle label="Push Notifications" hint="Firebase/APNs push to mobile devices" value={notifications.push_enabled} onChange={v => setNotifications(p => ({ ...p, push_enabled: v }))} />
+              <Toggle label="Email Notifications" hint="Transactional emails via SMTP/SendGrid" value={notifications.email_enabled} onChange={v => setNotifications(p => ({ ...p, email_enabled: v }))} />
+              <Toggle label="SMS Notifications" hint="SMS via Termii or Twilio (costs apply)" value={notifications.sms_enabled} onChange={v => setNotifications(p => ({ ...p, sms_enabled: v }))} />
+            </Card>
+            <Card title="Notification Types" configKey="notification_config" value={notifications} label="Notification Types">
+              <Toggle label="Order Updates" hint="Shipped, delivered, confirmed" value={notifications.order_updates} onChange={v => setNotifications(p => ({ ...p, order_updates: v }))} />
+              <Toggle label="Live Alerts" hint="Creator went live, invited to live" value={notifications.live_alerts} onChange={v => setNotifications(p => ({ ...p, live_alerts: v }))} />
+              <Toggle label="Promotional Messages" hint="Flash sales, featured drops" value={notifications.promo_messages} onChange={v => setNotifications(p => ({ ...p, promo_messages: v }))} />
+              <Toggle label="Payment Alerts" hint="Wallet credits, payouts, purchases" value={notifications.payment_alerts} onChange={v => setNotifications(p => ({ ...p, payment_alerts: v }))} />
+              <Toggle label="Security Alerts" hint="Login from new device, password change" value={notifications.security_alerts} onChange={v => setNotifications(p => ({ ...p, security_alerts: v }))} />
+            </Card>
+          </div>
+        )}
+
+        {/* CONTENT */}
+        {tab === "content" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Card title="Content Policies" configKey="content_config" value={content} label="Content Policies">
+              <NumField label="Minimum Age (years)" hint="Users below this age cannot register" value={content.min_age} onChange={v => setContent(p => ({ ...p, min_age: v }))} />
+              <NumField label="Max Video Upload (MB)" hint="Maximum file size for video uploads" value={content.max_video_mb} onChange={v => setContent(p => ({ ...p, max_video_mb: v }))} />
+              <NumField label="Max Image Upload (MB)" hint="Maximum file size for image uploads" value={content.max_image_mb} onChange={v => setContent(p => ({ ...p, max_image_mb: v }))} />
+              <NumField label="Max Caption Length" hint="Max characters in post captions" value={content.max_caption_length} onChange={v => setContent(p => ({ ...p, max_caption_length: v }))} />
+              <NumField label="Max Live Duration (hours)" hint="Maximum hours a stream can run before auto-end" value={content.max_live_hours} onChange={v => setContent(p => ({ ...p, max_live_hours: v }))} />
+            </Card>
+            <Card title="Moderation Automation" configKey="content_config" value={content} label="Moderation">
+              <Toggle label="Auto Moderation" hint="AI scans posts and live streams automatically" value={content.auto_moderation} onChange={v => setContent(p => ({ ...p, auto_moderation: v }))} />
+              <Toggle label="NSFW Detection" hint="Block explicit images and videos automatically" value={content.nsfw_detection} onChange={v => setContent(p => ({ ...p, nsfw_detection: v }))} />
+              <Toggle label="Adult Content" hint="Allow adult (18+) verified content on platform" value={content.adult_content} onChange={v => setContent(p => ({ ...p, adult_content: v }))} />
+              <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)" }}>
+                <p style={{ fontSize: 12, color: "#fca5a5", lineHeight: 1.6 }}>
+                  Disabling auto moderation increases exposure to harmful content. Ensure manual moderation team is active before disabling.
+                </p>
+              </div>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
