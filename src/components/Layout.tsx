@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { useAuth } from "../lib/auth";
@@ -9,10 +9,17 @@ export function Layout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!admin) navigate("/login");
-  }, [admin]);
+    if (!admin) navigate("/login", { replace: true });
+  }, [admin, navigate]);
 
-  if (!admin) return null;
+  if (!admin) return (
+    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-xl font-black text-white">S</div>
+        <div className="w-6 h-6 border-2 border-purple-500/50 border-t-purple-400 rounded-full animate-spin" />
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex h-screen bg-[#0a0a0f] overflow-hidden">

@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { Eye, EyeOff, Lock, Mail, AlertCircle } from "lucide-react";
 
 export function Login() {
-  const { login } = useAuth();
+  const { login, admin } = useAuth();
   const navigate = useNavigate();
+
+  if (admin) return <Navigate to="/" replace />;
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw]     = useState(false);
