@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { PageHeader } from "../../components/PageHeader";
-import { Globe, DollarSign, Percent, Bell, Shield, Save, CheckCircle } from "lucide-react";
+import { Globe, DollarSign, Percent, Bell, Shield, Save, CheckCircle, ShoppingBag } from "lucide-react";
 
-type Tab = "commission" | "countries" | "currencies" | "withdrawal" | "payouts" | "notifications" | "content";
+type Tab = "commission" | "countries" | "currencies" | "withdrawal" | "payouts" | "notifications" | "content" | "live_shop";
 
 const COUNTRIES = [
   { code: "NG", name: "Nigeria",      flag: "🇳🇬", currency: "NGN" },
@@ -71,6 +71,22 @@ export function AppSettings() {
     max_live_hours: 8, max_caption_length: 2200,
   });
 
+  const [liveShop, setLiveShop] = useState({
+    enabled: true,
+    product_card_enabled: true,
+    auto_popup_enabled: true,
+    ai_question_detection: true,
+    require_seller_approval: false,
+    commission_live_sales: 8,
+    max_products_per_live: 20,
+    flash_deal_allowed: true,
+    free_gift_allowed: true,
+    live_deal_max_discount: 80,
+    service_booking_enabled: true,
+    guest_can_buy: true,
+    auto_show_card_on_pin: true,
+  });
+
   useEffect(() => {
     async function load() {
       const { data } = await supabase.from("app_config").select("key,value")
@@ -110,6 +126,7 @@ export function AppSettings() {
     { key: "payouts",       label: "Payout Rails",  icon: <Globe size={14} /> },
     { key: "notifications", label: "Notifications", icon: <Bell size={14} /> },
     { key: "content",       label: "Content Rules", icon: <Shield size={14} /> },
+    { key: "live_shop",     label: "Live Shopping", icon: <ShoppingBag size={14} /> },
   ];
 
   const SaveBtn = ({ configKey, value, label }: { configKey: string; value: any; label: string }) => (
@@ -383,6 +400,34 @@ export function AppSettings() {
               <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)" }}>
                 <p style={{ fontSize: 12, color: "#fca5a5", lineHeight: 1.6 }}>
                   Disabling auto moderation increases exposure to harmful content. Ensure manual moderation team is active before disabling.
+                </p>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* LIVE SHOPPING */}
+        {tab === "live_shop" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Card title="Live Shopping Core" configKey="live_shop_config" value={liveShop} label="Live Shopping">
+              <Toggle label="Enable Live Shopping" hint="Allow vendors to sell during any live stream type" value={liveShop.enabled} onChange={v => setLiveShop(p => ({ ...p, enabled: v }))} />
+              <Toggle label="Product Card Overlay" hint="Show floating product card on viewer screen" value={liveShop.product_card_enabled} onChange={v => setLiveShop(p => ({ ...p, product_card_enabled: v }))} />
+              <Toggle label="Auto Pop-up on Pin" hint="Product card auto-shows when host pins a product" value={liveShop.auto_show_card_on_pin} onChange={v => setLiveShop(p => ({ ...p, auto_show_card_on_pin: v }))} />
+              <Toggle label="Auto Pop-up from Questions" hint='Card appears when viewer asks "how much?" or similar' value={liveShop.auto_popup_enabled} onChange={v => setLiveShop(p => ({ ...p, auto_popup_enabled: v }))} />
+              <Toggle label="AI Question Detection" hint="Soko AI detects buy-intent keywords in chat" value={liveShop.ai_question_detection} onChange={v => setLiveShop(p => ({ ...p, ai_question_detection: v }))} />
+              <Toggle label="Require Seller Approval" hint="Sellers must be approved before live shopping" value={liveShop.require_seller_approval} onChange={v => setLiveShop(p => ({ ...p, require_seller_approval: v }))} />
+              <Toggle label="Guest Checkout" hint="Non-registered users can still buy from live" value={liveShop.guest_can_buy} onChange={v => setLiveShop(p => ({ ...p, guest_can_buy: v }))} />
+            </Card>
+            <Card title="Deals & Commerce Rules" configKey="live_shop_config" value={liveShop} label="Live Shop Rules">
+              <NumField label="Live Sales Commission (%)" hint="Soko fee on each order placed inside a live stream" value={liveShop.commission_live_sales} onChange={v => setLiveShop(p => ({ ...p, commission_live_sales: v }))} />
+              <NumField label="Max Products Per Live" hint="Maximum number of products a host can list" value={liveShop.max_products_per_live} onChange={v => setLiveShop(p => ({ ...p, max_products_per_live: v }))} />
+              <NumField label="Max Flash Deal Discount (%)" hint="Cap on how much sellers can discount in a flash deal" value={liveShop.live_deal_max_discount} onChange={v => setLiveShop(p => ({ ...p, live_deal_max_discount: v }))} />
+              <Toggle label="Flash Deals Allowed" hint="Sellers can run time-limited flash discounts during live" value={liveShop.flash_deal_allowed} onChange={v => setLiveShop(p => ({ ...p, flash_deal_allowed: v }))} />
+              <Toggle label="Free Gift Promotions" hint="Sellers can offer free gifts with purchases during live" value={liveShop.free_gift_allowed} onChange={v => setLiveShop(p => ({ ...p, free_gift_allowed: v }))} />
+              <Toggle label="Service Booking in Live" hint="Service providers can accept bookings inside live" value={liveShop.service_booking_enabled} onChange={v => setLiveShop(p => ({ ...p, service_booking_enabled: v }))} />
+              <div style={{ padding: "12px 14px", borderRadius: 12, background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
+                <p style={{ fontSize: 12, color: "#6ee7b7", lineHeight: 1.6 }}>
+                  Live shopping works across all stream types — camera, product, service, voice, and streaming. It only appears if the host has products or services attached to their account.
                 </p>
               </div>
             </Card>
