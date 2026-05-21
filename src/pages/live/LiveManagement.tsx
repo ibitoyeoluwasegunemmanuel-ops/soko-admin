@@ -271,15 +271,16 @@ export function LiveManagement() {
             {/* Battle/Match Settings */}
             <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
               <p className="text-[14px] font-black text-white mb-1">⚔ Battle / Match Settings</p>
-              <p className="text-[12px] text-white/30 mb-5">Control how live battles work across the platform</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <p className="text-[12px] text-white/30 mb-5">Control 1v1, 4-way solo, and 2v2 team battles</p>
+
+              {/* Battle mode enables */}
+              <p className="text-[11px] font-bold text-white/30 uppercase tracking-wider mb-3">Battle Modes</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
                 {[
-                  { key: "battle_enabled",        label: "Enable Battle/Match" },
-                  { key: "battle_gifts_only",      label: "Gifts-only scoring" },
-                  { key: "battle_overtime",        label: "Sudden-death overtime" },
-                  { key: "battle_public_ranking",  label: "Show in public ranking" },
-                  { key: "battle_streak_display",  label: "Show win streak badge" },
-                  { key: "battle_rematch",         label: "Allow rematch request" },
+                  { key: "battle_1v1",           label: "⚔ 1v1 Battle" },
+                  { key: "battle_four_way_solo",  label: "🏟 4-Way Solo" },
+                  { key: "battle_2v2_team",       label: "👥 2v2 Team Battle" },
+                  { key: "battle_overtime",        label: "⏱ Overtime / Sudden death" },
                 ].map(s => (
                   <div key={s.key} className="flex items-center justify-between p-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl">
                     <span className="text-[12px] font-semibold text-white/70">{s.label}</span>
@@ -290,11 +291,36 @@ export function LiveManagement() {
                   </div>
                 ))}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 12 }}>
+
+              {/* Battle rules */}
+              <p className="text-[11px] font-bold text-white/30 uppercase tracking-wider mb-3">Rules & Scoring</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
                 {[
-                  { key: "battle_default_mins", label: "Default duration (min)", def: 5 },
-                  { key: "battle_max_streak",   label: "Max streak display",     def: 99 },
-                  { key: "battle_commission",   label: "Battle gift commission %",def: 5 },
+                  { key: "battle_enabled",        label: "Enable all battle" },
+                  { key: "battle_gifts_only",      label: "Gifts-only scoring" },
+                  { key: "battle_public_ranking",  label: "Show in public ranking" },
+                  { key: "battle_streak_display",  label: "Show win streak badge" },
+                  { key: "battle_rematch",         label: "Allow rematch request" },
+                  { key: "battle_contributor_list",label: "Show contributors panel" },
+                ].map(s => (
+                  <div key={s.key} className="flex items-center justify-between p-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl">
+                    <span className="text-[12px] font-semibold text-white/70">{s.label}</span>
+                    <button onClick={() => setSettings(prev => ({ ...prev, [s.key]: !(prev[s.key] ?? true) }))}
+                      className={`relative w-10 h-5 rounded-full transition-all flex-shrink-0 ${(settings[s.key] ?? true) ? "bg-[#7c3aed]" : "bg-[#1e1e2e]"}`}>
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${(settings[s.key] ?? true) ? "left-5" : "left-0.5"}`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                {[
+                  { key: "battle_default_mins",    label: "Default duration (min)", def: 5 },
+                  { key: "battle_max_streak",       label: "Max streak display",     def: 99 },
+                  { key: "battle_commission",       label: "Gift commission %",      def: 5 },
+                  { key: "battle_coins_per_point",  label: "Coins per battle point", def: 1 },
+                  { key: "battle_min_followers",    label: "Min followers to battle", def: 0 },
+                  { key: "battle_contributor_limit",label: "Max contributors shown",  def: 20 },
                 ].map(f => (
                   <div key={f.key}>
                     <label className="text-[11px] font-bold text-white/30 uppercase tracking-wider block mb-2">{f.label}</label>
