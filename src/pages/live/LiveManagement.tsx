@@ -243,38 +243,114 @@ export function LiveManagement() {
 
         {/* Settings Tab */}
         {tab === "settings" && (
-          <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <p className="text-[14px] font-black text-white">Live Mode Settings</p>
-                <p className="text-[12px] text-white/30 mt-0.5">Toggle live stream types platform-wide</p>
-              </div>
-              <button
-                onClick={saveSettings}
-                className="px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#7c3aed] text-white hover:bg-purple-600 transition-all"
-              >
-                {saved ? "Saved!" : "Save Changes"}
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {LIVE_MODES.map(mode => (
-                <div
-                  key={mode.key}
-                  className="flex items-center justify-between p-4 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl hover:border-[#2a2a3e] transition-all"
-                >
-                  <span className="text-[13px] font-semibold text-white/70">{mode.label}</span>
-                  <button
-                    onClick={() => setSettings(prev => ({ ...prev, [mode.key]: !prev[mode.key] }))}
-                    className={`relative w-10 h-5 rounded-full transition-all flex-shrink-0 ${
-                      settings[mode.key] ? "bg-[#7c3aed]" : "bg-[#1e1e2e]"
-                    }`}
-                  >
-                    <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${
-                      settings[mode.key] ? "left-5" : "left-0.5"
-                    }`} />
-                  </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {/* Live modes */}
+            <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-[14px] font-black text-white">Live Mode Settings</p>
+                  <p className="text-[12px] text-white/30 mt-0.5">Toggle live stream types platform-wide</p>
                 </div>
-              ))}
+                <button onClick={saveSettings} className="px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#7c3aed] text-white hover:bg-purple-600 transition-all">
+                  {saved ? "Saved!" : "Save Changes"}
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {LIVE_MODES.map(mode => (
+                  <div key={mode.key} className="flex items-center justify-between p-4 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl hover:border-[#2a2a3e] transition-all">
+                    <span className="text-[13px] font-semibold text-white/70">{mode.label}</span>
+                    <button onClick={() => setSettings(prev => ({ ...prev, [mode.key]: !prev[mode.key] }))}
+                      className={`relative w-10 h-5 rounded-full transition-all flex-shrink-0 ${settings[mode.key] ? "bg-[#7c3aed]" : "bg-[#1e1e2e]"}`}>
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${settings[mode.key] ? "left-5" : "left-0.5"}`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Battle/Match Settings */}
+            <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
+              <p className="text-[14px] font-black text-white mb-1">⚔ Battle / Match Settings</p>
+              <p className="text-[12px] text-white/30 mb-5">Control how live battles work across the platform</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                {[
+                  { key: "battle_enabled",        label: "Enable Battle/Match" },
+                  { key: "battle_gifts_only",      label: "Gifts-only scoring" },
+                  { key: "battle_overtime",        label: "Sudden-death overtime" },
+                  { key: "battle_public_ranking",  label: "Show in public ranking" },
+                  { key: "battle_streak_display",  label: "Show win streak badge" },
+                  { key: "battle_rematch",         label: "Allow rematch request" },
+                ].map(s => (
+                  <div key={s.key} className="flex items-center justify-between p-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl">
+                    <span className="text-[12px] font-semibold text-white/70">{s.label}</span>
+                    <button onClick={() => setSettings(prev => ({ ...prev, [s.key]: !(prev[s.key] ?? true) }))}
+                      className={`relative w-10 h-5 rounded-full transition-all flex-shrink-0 ${(settings[s.key] ?? true) ? "bg-[#7c3aed]" : "bg-[#1e1e2e]"}`}>
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${(settings[s.key] ?? true) ? "left-5" : "left-0.5"}`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 12 }}>
+                {[
+                  { key: "battle_default_mins", label: "Default duration (min)", def: 5 },
+                  { key: "battle_max_streak",   label: "Max streak display",     def: 99 },
+                  { key: "battle_commission",   label: "Battle gift commission %",def: 5 },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="text-[11px] font-bold text-white/30 uppercase tracking-wider block mb-2">{f.label}</label>
+                    <input type="number" defaultValue={f.def}
+                      className="w-full px-3 py-2 rounded-lg bg-[#0a0a0f] border border-[#1e1e2e] text-white text-[13px] outline-none" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Host Tools Settings */}
+            <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
+              <p className="text-[14px] font-black text-white mb-1">🎛️ Host Studio Tools</p>
+              <p className="text-[12px] text-white/30 mb-5">Control which studio tools are available to hosts</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {[
+                  "enhance_beauty", "live_effects", "live_stickers", "background_music",
+                  "voice_effects", "sound_effects", "virtual_background", "live_boards",
+                  "live_highlights", "bg_noise_removal", "mirror_video", "pause_live",
+                ].map(k => (
+                  <div key={k} className="flex items-center justify-between p-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl">
+                    <span className="text-[12px] font-semibold text-white/60 capitalize">{k.replace(/_/g, " ")}</span>
+                    <button onClick={() => setSettings(prev => ({ ...prev, [k]: !(prev[k] ?? true) }))}
+                      className={`relative w-10 h-5 rounded-full transition-all flex-shrink-0 ${(settings[k] ?? true) ? "bg-[#10b981]" : "bg-[#1e1e2e]"}`}>
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${(settings[k] ?? true) ? "left-5" : "left-0.5"}`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Co-host Settings */}
+            <div className="bg-[#12121c] border border-[#1e1e2e] rounded-xl p-6">
+              <p className="text-[14px] font-black text-white mb-1">🔗 Co-host Settings</p>
+              <p className="text-[12px] text-white/30 mb-5">Control co-host and multi-guest features</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {[
+                  { key: "cohost_enabled",          label: "Enable co-host" },
+                  { key: "cohost_require_follow",    label: "Must follow host to join" },
+                  { key: "cohost_approval",          label: "Host must approve requests" },
+                  { key: "cohost_split_earnings",    label: "Split gift earnings" },
+                ].map(s => (
+                  <div key={s.key} className="flex items-center justify-between p-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-xl">
+                    <span className="text-[12px] font-semibold text-white/60">{s.label}</span>
+                    <button onClick={() => setSettings(prev => ({ ...prev, [s.key]: !(prev[s.key] ?? true) }))}
+                      className={`relative w-10 h-5 rounded-full transition-all flex-shrink-0 ${(settings[s.key] ?? true) ? "bg-[#7c3aed]" : "bg-[#1e1e2e]"}`}>
+                      <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${(settings[s.key] ?? true) ? "left-5" : "left-0.5"}`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 12 }}>
+                <label className="text-[11px] font-bold text-white/30 uppercase tracking-wider block mb-2">Max co-host seats</label>
+                <input type="number" defaultValue={6}
+                  className="w-32 px-3 py-2 rounded-lg bg-[#0a0a0f] border border-[#1e1e2e] text-white text-[13px] outline-none" />
+              </div>
             </div>
           </div>
         )}
