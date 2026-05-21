@@ -40,6 +40,10 @@ import { LogisticsPartners } from "./pages/logistics/LogisticsPartners";
 import { ProductVariants } from "./pages/variants/ProductVariants";
 import { TwoFactorAuth } from "./pages/two-factor/TwoFactorAuth";
 import { CreatorAnalytics } from "./pages/creators/CreatorAnalytics";
+import { CreatorLevels } from "./pages/creator-levels/CreatorLevels";
+import { DisputeManagement } from "./pages/disputes/DisputeManagement";
+import { ReportsManagement } from "./pages/reports/ReportsManagement";
+import { GrowthDashboard } from "./pages/growth/GrowthDashboard";
 
 export default function App() {
   return (
@@ -51,8 +55,10 @@ export default function App() {
         <Route path="/users"               element={<Users />} />
         <Route path="/creators"            element={<Creators />} />
         <Route path="/creator-analytics"   element={<CreatorAnalytics />} />
+        <Route path="/creator-levels"      element={<CreatorLevels />} />
         <Route path="/analytics"           element={<Analytics />} />
         <Route path="/revenue"             element={<RevenueIntelligence />} />
+        <Route path="/growth"              element={<GrowthDashboard />} />
 
         {/* Platform */}
         <Route path="/live"            element={<LiveManagement />} />
@@ -84,6 +90,8 @@ export default function App() {
         <Route path="/cms"             element={<ContentManagement />} />
 
         {/* Safety */}
+        <Route path="/reports"         element={<ReportsManagement />} />
+        <Route path="/disputes"        element={<DisputeManagement />} />
         <Route path="/moderation"      element={<Moderation />} />
         <Route path="/verification"    element={<Verification />} />
         <Route path="/fraud"           element={<FraudRisk />} />

@@ -6,7 +6,7 @@ import {
   Trophy, ImageIcon, BarChart3, Shield, CheckSquare, Sparkles,
   Flag, Settings, ScrollText, LogOut, Briefcase, Tag, MessageSquare,
   Layout, AlertTriangle, Megaphone, Code, Activity, DollarSign, UserCog, Bot,
-  Link2, Truck, Layers, ShieldCheck, PieChart
+  Link2, Truck, Layers, ShieldCheck, PieChart, TrendingUp, Flag, Gavel
 } from "lucide-react";
 
 const NAV = [
@@ -17,7 +17,9 @@ const NAV = [
       { to: "/users",        label: "Users",            icon: Users },
       { to: "/creators",            label: "Creators",            icon: Star },
       { to: "/creator-analytics",   label: "Creator Analytics",   icon: PieChart },
+      { to: "/creator-levels",      label: "Creator Levels",      icon: Star },
       { to: "/analytics",           label: "Analytics",           icon: BarChart3 },
+      { to: "/growth",              label: "Growth",              icon: TrendingUp },
       { to: "/revenue",      label: "Revenue",          icon: DollarSign },
     ],
   },
@@ -65,6 +67,8 @@ const NAV = [
   {
     section: "Safety",
     items: [
+      { to: "/reports",       label: "Reports",           icon: Flag },
+      { to: "/disputes",      label: "Disputes",          icon: Gavel },
       { to: "/moderation",    label: "Moderation",        icon: Shield },
       { to: "/verification",  label: "Verification",      icon: CheckSquare },
       { to: "/fraud",         label: "Fraud & Risk",      icon: AlertTriangle },
