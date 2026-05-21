@@ -3,7 +3,7 @@ import { supabase } from "../../lib/supabase";
 import { PageHeader } from "../../components/PageHeader";
 import { Globe, DollarSign, Percent, Bell, Shield, Save, CheckCircle } from "lucide-react";
 
-type Tab = "commission" | "countries" | "currencies" | "withdrawal" | "notifications" | "content";
+type Tab = "commission" | "countries" | "currencies" | "withdrawal" | "payouts" | "notifications" | "content";
 
 const COUNTRIES = [
   { code: "NG", name: "Nigeria",      flag: "🇳🇬", currency: "NGN" },
@@ -41,6 +41,21 @@ export function AppSettings() {
     min_ngn: 1000, max_ngn: 5000000,
     pending_days: 3, kyc_threshold: 50000,
     daily_limit: 500000, weekly_limit: 2000000,
+  });
+
+  const [countryPayouts, setCountryPayouts] = useState<Record<string, { provider: string; method: string; minPayout: number; fee: number; enabled: boolean }>>({
+    NG: { provider: "Paystack",      method: "Bank Transfer (NGN)",         minPayout: 1000,   fee: 1.5,  enabled: true  },
+    GH: { provider: "Flutterwave",   method: "Mobile Money (GHS)",          minPayout: 50,     fee: 1.5,  enabled: true  },
+    KE: { provider: "Flutterwave",   method: "M-Pesa / Bank (KES)",         minPayout: 500,    fee: 1.5,  enabled: true  },
+    ZA: { provider: "Flutterwave",   method: "Bank Transfer (ZAR)",         minPayout: 100,    fee: 1.8,  enabled: true  },
+    UG: { provider: "Flutterwave",   method: "Mobile Money (UGX)",          minPayout: 5000,   fee: 1.5,  enabled: true  },
+    TZ: { provider: "Flutterwave",   method: "Mobile Money (TZS)",          minPayout: 5000,   fee: 1.5,  enabled: false },
+    RW: { provider: "Flutterwave",   method: "Mobile Money (RWF)",          minPayout: 2000,   fee: 1.5,  enabled: false },
+    ET: { provider: "Flutterwave",   method: "Bank Transfer (ETB)",         minPayout: 500,    fee: 2.0,  enabled: false },
+    CM: { provider: "Flutterwave",   method: "Mobile Money (XAF)",          minPayout: 1000,   fee: 2.0,  enabled: false },
+    SN: { provider: "Flutterwave",   method: "Mobile Money (XOF)",          minPayout: 1000,   fee: 2.0,  enabled: false },
+    GB: { provider: "Wise",          method: "Bank Transfer (GBP)",         minPayout: 10,     fee: 0.5,  enabled: true  },
+    US: { provider: "Stripe",        method: "ACH Bank Transfer (USD)",     minPayout: 10,     fee: 0.3,  enabled: true  },
   });
 
   const [notifications, setNotifications] = useState({
@@ -92,6 +107,7 @@ export function AppSettings() {
     { key: "countries",     label: "Countries",     icon: <Globe size={14} /> },
     { key: "currencies",    label: "Currencies",    icon: <DollarSign size={14} /> },
     { key: "withdrawal",    label: "Withdrawals",   icon: <DollarSign size={14} /> },
+    { key: "payouts",       label: "Payout Rails",  icon: <Globe size={14} /> },
     { key: "notifications", label: "Notifications", icon: <Bell size={14} /> },
     { key: "content",       label: "Content Rules", icon: <Shield size={14} /> },
   ];
@@ -294,6 +310,59 @@ export function AppSettings() {
               <Toggle label="Payment Alerts" hint="Wallet credits, payouts, purchases" value={notifications.payment_alerts} onChange={v => setNotifications(p => ({ ...p, payment_alerts: v }))} />
               <Toggle label="Security Alerts" hint="Login from new device, password change" value={notifications.security_alerts} onChange={v => setNotifications(p => ({ ...p, security_alerts: v }))} />
             </Card>
+          </div>
+        )}
+
+        {/* PAYOUT RAILS */}
+        {tab === "payouts" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.2)", fontSize: 13, color: "rgba(240,242,255,0.6)", lineHeight: 1.6 }}>
+              Configure which payment provider handles withdrawals for each country. Flutterwave covers all African markets. Wise/Stripe handle UK & USA.
+            </div>
+            {COUNTRIES.map(c => {
+              const cfg = countryPayouts[c.code];
+              if (!cfg) return null;
+              return (
+                <div key={c.code} style={{ background: "var(--surface)", border: `1px solid ${cfg.enabled ? "rgba(16,185,129,0.15)" : "var(--border)"}`, borderRadius: 16, padding: "16px 20px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                    <span style={{ fontSize: 24 }}>{c.flag}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>{c.name}</div>
+                      <div style={{ fontSize: 12, color: "var(--muted)" }}>{c.currency}</div>
+                    </div>
+                    <div onClick={() => setCountryPayouts(prev => ({ ...prev, [c.code]: { ...prev[c.code], enabled: !prev[c.code].enabled } }))}
+                      style={{ width: 40, height: 22, borderRadius: 11, background: cfg.enabled ? "#10b981" : "rgba(255,255,255,0.1)", cursor: "pointer", position: "relative", transition: "background 0.2s" }}>
+                      <div style={{ position: "absolute", top: 3, left: cfg.enabled ? 21 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left 0.2s" }} />
+                    </div>
+                  </div>
+                  {cfg.enabled && (
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                      <div>
+                        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Provider</label>
+                        <select value={cfg.provider} onChange={e => setCountryPayouts(prev => ({ ...prev, [c.code]: { ...prev[c.code], provider: e.target.value } }))}
+                          style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", fontSize: 13 }}>
+                          {["Paystack","Flutterwave","Wise","Stripe","Chipper Cash"].map(p => <option key={p} value={p}>{p}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Min Payout</label>
+                        <input type="number" value={cfg.minPayout} onChange={e => setCountryPayouts(prev => ({ ...prev, [c.code]: { ...prev[c.code], minPayout: Number(e.target.value) } }))}
+                          style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", fontSize: 13 }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Fee (%)</label>
+                        <input type="number" step="0.1" value={cfg.fee} onChange={e => setCountryPayouts(prev => ({ ...prev, [c.code]: { ...prev[c.code], fee: Number(e.target.value) } }))}
+                          style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", fontSize: 13 }} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <button onClick={() => { supabase.from("app_config").upsert({ key: "country_payout_rails", value: countryPayouts }); }}
+              style={{ padding: "12px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#7c3aed,#ec4899)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+              Save Payout Configuration
+            </button>
           </div>
         )}
 
