@@ -19,47 +19,82 @@ import { Subscriptions } from "./pages/subscriptions/Subscriptions";
 import { Ads } from "./pages/ads/Ads";
 import { League } from "./pages/league/League";
 import { GiftGallery } from "./pages/gift-gallery/GiftGallery";
+import { Campaigns } from "./pages/campaigns/Campaigns";
+import { SupportCenter } from "./pages/support/SupportCenter";
+import { ContentManagement } from "./pages/cms/ContentManagement";
 import { Moderation } from "./pages/moderation/Moderation";
 import { Verification } from "./pages/verification/Verification";
+import { FraudRisk } from "./pages/fraud/FraudRisk";
+import { Compliance } from "./pages/compliance/Compliance";
 import { AISettings } from "./pages/ai-settings/AISettings";
+import { TeamManagement } from "./pages/team/TeamManagement";
+import { DeveloperTools } from "./pages/developer/DeveloperTools";
+import { PlatformHealth } from "./pages/health/PlatformHealth";
 import { FeatureFlags } from "./pages/feature-flags/FeatureFlags";
 import { AppSettings } from "./pages/settings/AppSettings";
 import { Analytics } from "./pages/analytics/Analytics";
+import { RevenueIntelligence } from "./pages/revenue/RevenueIntelligence";
 import { SystemLogs } from "./pages/logs/SystemLogs";
-import { Notifications } from "./pages/notifications/Notifications";
 
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route element={<Layout />}>
-        <Route path="/"               element={<Overview />} />
-        <Route path="/users"          element={<Users />} />
-        <Route path="/creators"       element={<Creators />} />
-        <Route path="/live"           element={<LiveManagement />} />
-        <Route path="/marketplace"    element={<Marketplace />} />
-        <Route path="/products"       element={<Products />} />
-        <Route path="/services"       element={<Services />} />
-        <Route path="/businesses"     element={<Businesses />} />
-        <Route path="/professionals"  element={<Professionals />} />
-        <Route path="/auctions"       element={<Auctions />} />
-        <Route path="/orders"         element={<Orders />} />
-        <Route path="/wallet"         element={<WalletPayments />} />
-        <Route path="/payouts"        element={<Payouts />} />
-        <Route path="/coins-gifts"    element={<CoinsGifts />} />
-        <Route path="/subscriptions"  element={<Subscriptions />} />
-        <Route path="/ads"            element={<Ads />} />
-        <Route path="/league"         element={<League />} />
-        <Route path="/gift-gallery"   element={<GiftGallery />} />
-        <Route path="/moderation"     element={<Moderation />} />
-        <Route path="/verification"   element={<Verification />} />
-        <Route path="/notifications"  element={<Notifications />} />
-        <Route path="/ai-settings"    element={<AISettings />} />
-        <Route path="/feature-flags"  element={<FeatureFlags />} />
-        <Route path="/settings"       element={<AppSettings />} />
-        <Route path="/analytics"      element={<Analytics />} />
-        <Route path="/logs"           element={<SystemLogs />} />
-        <Route path="*"               element={<Navigate to="/" replace />} />
+        {/* Main Menu */}
+        <Route path="/"                element={<Overview />} />
+        <Route path="/users"           element={<Users />} />
+        <Route path="/creators"        element={<Creators />} />
+        <Route path="/analytics"       element={<Analytics />} />
+        <Route path="/revenue"         element={<RevenueIntelligence />} />
+
+        {/* Platform */}
+        <Route path="/live"            element={<LiveManagement />} />
+        <Route path="/marketplace"     element={<Marketplace />} />
+        <Route path="/products"        element={<Products />} />
+        <Route path="/services"        element={<Services />} />
+        <Route path="/businesses"      element={<Businesses />} />
+        <Route path="/professionals"   element={<Professionals />} />
+        <Route path="/auctions"        element={<Auctions />} />
+        <Route path="/orders"          element={<Orders />} />
+
+        {/* Finance */}
+        <Route path="/wallet"          element={<WalletPayments />} />
+        <Route path="/payouts"         element={<Payouts />} />
+        <Route path="/coins-gifts"     element={<CoinsGifts />} />
+        <Route path="/subscriptions"   element={<Subscriptions />} />
+        <Route path="/ads"             element={<Ads />} />
+
+        {/* Growth */}
+        <Route path="/league"          element={<League />} />
+        <Route path="/gift-gallery"    element={<GiftGallery />} />
+        <Route path="/campaigns"       element={<Campaigns />} />
+
+        {/* Engagement */}
+        <Route path="/support"         element={<SupportCenter />} />
+        <Route path="/cms"             element={<ContentManagement />} />
+
+        {/* Safety */}
+        <Route path="/moderation"      element={<Moderation />} />
+        <Route path="/verification"    element={<Verification />} />
+        <Route path="/fraud"           element={<FraudRisk />} />
+        <Route path="/compliance"      element={<Compliance />} />
+        <Route path="/ai-settings"     element={<AISettings />} />
+
+        {/* Team */}
+        <Route path="/team"            element={<TeamManagement />} />
+
+        {/* Developer */}
+        <Route path="/developer-tools" element={<DeveloperTools />} />
+        <Route path="/platform-health" element={<PlatformHealth />} />
+        <Route path="/feature-flags"   element={<FeatureFlags />} />
+        <Route path="/settings"        element={<AppSettings />} />
+        <Route path="/logs"            element={<SystemLogs />} />
+
+        {/* Removed: /notifications (merged into /campaigns) */}
+        <Route path="/notifications"   element={<Navigate to="/campaigns" replace />} />
+
+        <Route path="*"                element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   );
