@@ -35,6 +35,8 @@ import { AppSettings } from "./pages/settings/AppSettings";
 import { Analytics } from "./pages/analytics/Analytics";
 import { RevenueIntelligence } from "./pages/revenue/RevenueIntelligence";
 import { SystemLogs } from "./pages/logs/SystemLogs";
+import { AffiliateMarketing } from "./pages/affiliate/AffiliateMarketing";
+import { LogisticsPartners } from "./pages/logistics/LogisticsPartners";
 
 export default function App() {
   return (
@@ -69,6 +71,8 @@ export default function App() {
         <Route path="/league"          element={<League />} />
         <Route path="/gift-gallery"    element={<GiftGallery />} />
         <Route path="/campaigns"       element={<Campaigns />} />
+        <Route path="/affiliate"       element={<AffiliateMarketing />} />
+        <Route path="/logistics"       element={<LogisticsPartners />} />
 
         {/* Engagement */}
         <Route path="/support"         element={<SupportCenter />} />

@@ -5,7 +5,8 @@ import {
   Gavel, Package, Wallet, ArrowUpFromLine, Gift, CreditCard, Zap,
   Trophy, ImageIcon, BarChart3, Shield, CheckSquare, Sparkles,
   Flag, Settings, ScrollText, LogOut, Briefcase, Tag, MessageSquare,
-  Layout, AlertTriangle, Megaphone, Code, Activity, DollarSign, UserCog, Bot
+  Layout, AlertTriangle, Megaphone, Code, Activity, DollarSign, UserCog, Bot,
+  Link2, Truck
 } from "lucide-react";
 
 const NAV = [
@@ -48,6 +49,8 @@ const NAV = [
       { to: "/league",        label: "League & Rankings", icon: Trophy },
       { to: "/gift-gallery",  label: "Gift Gallery",      icon: ImageIcon },
       { to: "/campaigns",     label: "Campaigns",         icon: Megaphone },
+      { to: "/affiliate",     label: "Affiliate Program", icon: Link2 },
+      { to: "/logistics",     label: "Logistics",         icon: Truck },
     ],
   },
   {

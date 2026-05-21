@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Soko — Investor Pitch Deck 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple: #7c3aed;
+    --pink: #ec4899;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --dark: #0b0c14;
+    --card: #12131f;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f2ff;
+    --muted: rgba(240,242,255,0.45);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Print: each section = new page */
+  @media print {
+    .slide { page-break-after: always; break-after: page; min-height: 100vh; }
+    body { background: #0b0c14 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .nav-bar { display: none; }
+    .slide:last-child { page-break-after: avoid; }
+  }
+
+  /* Navigation bar */
+  .nav-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(11,12,20,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-size: 18px; font-weight: 900; background: linear-gradient(135deg,#7c3aed,#ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-btn { padding: 8px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-primary { background: linear-gradient(135deg,#7c3aed,#ec4899); color: #fff; }
+
+  /* Slides */
+  .slide {
+    min-height: 100vh;
+    padding: 100px 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid rgba(124,58,237,0.15);
+  }
+
+  .slide-number {
+    position: absolute; top: 80px; right: 80px;
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  /* Gradient bg decorators */
+  .glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(120px); pointer-events: none; opacity: 0.12;
+  }
+
+  /* Typography */
+  .section-tag {
+    display: inline-block;
+    padding: 4px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    background: rgba(124,58,237,0.15); color: #a78bfa;
+    border: 1px solid rgba(124,58,237,0.3);
+    margin-bottom: 20px;
+  }
+
+  h1.hero { font-size: 72px; font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+  h2.slide-title { font-size: 42px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+  h3.sub-title { font-size: 22px; font-weight: 600; color: var(--muted); margin-bottom: 40px; }
+  .body-text { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 720px; }
+
+  .gradient-text { background: linear-gradient(135deg,#7c3aed,#ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .green-text { color: var(--green); }
+  .amber-text { color: var(--amber); }
+  .blue-text { color: var(--blue); }
+
+  /* Cards */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 28px;
+  }
+  .card-grid { display: grid; gap: 16px; }
+  .card-2 { grid-template-columns: 1fr 1fr; }
+  .card-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  /* Stat big */
+  .stat-big { text-align: center; }
+  .stat-big .num { font-size: 48px; font-weight: 900; background: linear-gradient(135deg,#7c3aed,#ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-big .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+  .stat-big .sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  /* Progress bars */
+  .bar-row { margin-bottom: 14px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .bar-track { height: 8px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; }
+
+  /* Lists */
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .check-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--muted); }
+  .check-list li::before { content: "✓"; color: var(--green); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+  .check-list li.warn::before { content: "⚡"; color: var(--amber); }
+  .check-list li.future::before { content: "→"; color: var(--blue); }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 20px; }
+  .timeline-item { display: flex; gap: 20px; align-items: flex-start; }
+  .timeline-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .timeline-content .phase { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .timeline-content .ptitle { font-size: 16px; font-weight: 700; color: var(--text); margin: 3px 0; }
+  .timeline-content .pdesc { font-size: 13px; color: var(--muted); }
+
+  /* Table */
+  .pitch-table { width: 100%; border-collapse: collapse; }
+  .pitch-table th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .pitch-table td { padding: 12px 16px; font-size: 13px; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .pitch-table td:first-child { color: var(--text); font-weight: 600; }
+  .pitch-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-green { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+  .badge-purple { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.25); }
+  .badge-amber { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+  .badge-blue { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+
+  /* Cover slide specific */
+  #slide-cover .hero { margin-bottom: 24px; }
+  .hero-sub { font-size: 22px; color: var(--muted); max-width: 620px; line-height: 1.6; margin-bottom: 48px; }
+  .hero-pills { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-pill { padding: 10px 22px; border-radius: 50px; font-size: 14px; font-weight: 600; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+  /* Footer stamp */
+  .slide-footer { position: absolute; bottom: 30px; left: 80px; right: 80px; display: flex; justify-content: space-between; align-items: center; }
+  .slide-footer span { font-size: 11px; color: rgba(240,242,255,0.15); }
+
+  /* Feature matrix */
+  .feature-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .feature-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; }
+  .feature-icon { font-size: 20px; flex-shrink: 0; }
+  .feature-text { font-size: 13px; color: var(--text); font-weight: 500; }
+  .feature-tag { margin-left: auto; flex-shrink: 0; }
+
+  /* Revenue chart bars */
+  .rev-bar-container { display: flex; align-items: flex-end; gap: 16px; height: 180px; }
+  .rev-col { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+  .rev-bar-wrap { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+  .rev-bar { width: 100%; border-radius: 8px 8px 0 0; }
+  .rev-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .rev-val { font-size: 12px; font-weight: 800; }
+
+  /* Use of funds donut via gradient */
+  .funds-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .fund-item { padding: 16px 20px; border-radius: 12px; border: 1px solid var(--border); }
+  .fund-pct { font-size: 32px; font-weight: 900; }
+  .fund-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .fund-amount { font-size: 12px; font-weight: 700; margin-top: 8px; }
+  .fund-desc { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Team card */
+  .team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .team-card { padding: 20px; text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+  .team-avatar { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #fff; }
+  .team-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .team-role { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .team-skills { font-size: 11px; color: rgba(240,242,255,0.25); margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="nav-bar">
+  <span class="nav-logo">SOKO</span>
+  <div class="nav-right">
+    <span style="font-size:12px;color:rgba(240,242,255,0.3)">Confidential — For Investor Review Only</span>
+    <button class="nav-btn btn-primary" onclick="window.print()">⬇ Download PDF</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+═══════════════════════════════════════════════════════ -->
+<section class="slide" id="slide-cover">
+  <div class="glow" style="width:600px;height:600px;background:#7c3aed;top:-100px;right:-100px;"></div>
+  <div class="glow" style="width:400px;height:400px;background:#ec4899;bottom:-100px;left:-50px;"></div>
+
+  <div style="max-width:900px;">
+    <div class="section-tag">Series Pre-Seed · 2026</div>
+    <h1 class="hero">Africa's First<br><span class="gradient-text">Live Commerce</span><br>Super-App</h1>
+    <p class="hero-sub">Soko combines TikTok-style live streaming, Shopify-grade marketplace, virtual gifting, auctions, and creator monetization — built for 1.4 billion Africans.</p>
+    <div class="hero-pills">
+      <span class="hero-pill" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)">🛒 Live Commerce</span>
+      <span class="hero-pill" style="background:rgba(236,72,153,0.15);color:#f9a8d4;border:1px solid rgba(236,72,153,0.3)">🎁 Virtual Gifting</span>
+      <span class="hero-pill" style="background:rgba(16,185,129,0.15);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)">⚡ Real-Time Auctions</span>
+      <span class="hero-pill" style="background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.3)">💰 Creator Economy</span>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>© 2026 Soko Technologies Ltd. — Confidential</span>
+    <span>soko-admin-tau.vercel.app</span>
+  </div>
+  <div class="slide-number">01 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#ef4444;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+
+  <div class="section-tag">The Problem</div>
+  <h2 class="slide-title">African Commerce is<br><span style="color:#ef4444;">Fragmented & Broken</span></h2>
+
+  <div class="card-grid card-2" style="margin-top:40px;">
+    <div class="card">
+      <div style="font-size:36px;margin-bottom:12px;">📱</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;">No Africa-first Commerce Platform</div>
+      <p style="font-size:13px;color:var(--muted);">Instagram, TikTok, and Shopify exist but none are built for naira-based transactions, Nigerian logistics, or the local creator culture. African sellers are underserved with poor UX, high fees, and no live selling tools.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:36px;margin-bottom:12px;">💸</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;">Creators Can't Monetize Locally</div>
+      <p style="font-size:13px;color:var(--muted);">Nigerian creators on TikTok earn USD but can't withdraw easily. Local platforms have no gifting economy, no subscription tools, no way to earn from live streams. The creator economy is essentially inaccessible for most Africans.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:36px;margin-bottom:12px;">📦</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;">Marketplace Trust Crisis</div>
+      <p style="font-size:13px;color:var(--muted);">Jiji, OLX, WhatsApp commerce — all suffer from scam listings, no buyer protection, no escrow, no verified sellers. Over ₦2.7 trillion in e-commerce transactions are lost annually to fraud and mistrust.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:36px;margin-bottom:12px;">🎯</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;">No Live Auction Platform for Africa</div>
+      <p style="font-size:13px;color:var(--muted);">Zero major African platforms offer real-time live auctions. The thrill economy (bidding wars, flash drops, limited editions) is completely untapped — a billion-dollar gap that Soko is purpose-built to fill.</p>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">02 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 3 — THE SOLUTION
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:600px;height:600px;background:#7c3aed;bottom:-200px;right:-100px;"></div>
+
+  <div class="section-tag">Our Solution</div>
+  <h2 class="slide-title"><span class="gradient-text">Soko</span> — One App for<br>Everything Commerce in Africa</h2>
+  <p class="body-text">Think TikTok Live + Shopify + Kickstarter + Twitch Bits — rebuilt from the ground up for Nigeria and Africa. One platform. One wallet. One creator economy.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px;">
+    {[
+      ["📺","Live Commerce","Sell while streaming. Viewers buy without leaving the stream. Products showcased in real time with instant checkout."],
+      ["🏪","Marketplace","Full-featured marketplace: products, services, businesses, professionals. AI-powered search. Escrow protection."],
+      ["🔨","Live Auctions","Real-time bidding with countdown timers. Exclusive drops. Limited edition items. Built-in excitement mechanics."],
+      ["🎁","Virtual Gifting","Creators receive virtual gifts (coins → ₦). 15+ gift animations. Leaderboards. League rankings. Gift gallery."],
+      ["⭐","Creator Subscriptions","Monthly fan subscriptions. Tiered access. Exclusive content. Revenue split directly to creator wallets."],
+      ["🪙","Soko Coins Economy","In-app coin economy: buy, gift, earn, redeem. Top-up via Paystack/Flutterwave. Withdraw to bank instantly."]
+    ].map(([i,t,d]) => `
+    <div class="card" style="position:relative;overflow:hidden;">
+      <div style="font-size:28px;margin-bottom:10px;">${i}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;">${t}</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7;">${d}</p>
+    </div>`).join("")}
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">03 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 4 — MARKET OPPORTUNITY
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#10b981;top:-100px;left:50%;"></div>
+
+  <div class="section-tag">Market Opportunity</div>
+  <h2 class="slide-title">A <span class="green-text">$180 Billion</span> Market<br>With No Clear Leader</h2>
+
+  <div class="card-grid card-4" style="margin-top:40px;margin-bottom:32px;">
+    <div class="card stat-big">
+      <div class="num">$18B</div>
+      <div class="label">Nigeria E-Commerce TAM</div>
+      <div class="sub">Growing 30% YoY</div>
+    </div>
+    <div class="card stat-big">
+      <div class="num" style="background:linear-gradient(135deg,#10b981,#3b82f6);-webkit-background-clip:text;">$180B</div>
+      <div class="label">Africa E-Commerce TAM 2030</div>
+      <div class="sub">500M+ internet users</div>
+    </div>
+    <div class="card stat-big">
+      <div class="num" style="background:linear-gradient(135deg,#ec4899,#f59e0b);-webkit-background-clip:text;">$4B</div>
+      <div class="label">Creator Economy Nigeria</div>
+      <div class="sub">8M+ active creators</div>
+    </div>
+    <div class="card stat-big">
+      <div class="num" style="background:linear-gradient(135deg,#3b82f6,#10b981);-webkit-background-clip:text;">220M</div>
+      <div class="label">Nigeria Population</div>
+      <div class="sub">Median age: 18.1 years</div>
+    </div>
+  </div>
+
+  <div class="card-grid card-2">
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">Nigeria TAM / SAM / SOM</div>
+      <div class="bar-row">
+        <div class="bar-label"><span>TAM — Total Addressable Market</span><span style="color:var(--green);">$18B</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#7c3aed,#ec4899);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>SAM — Serviceable Market (online)</span><span style="color:var(--green);">$6.4B</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:64%;background:linear-gradient(90deg,#ec4899,#f59e0b);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>SOM — Realistically Capture (3yr)</span><span style="color:var(--green);">$320M</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:18%;background:#10b981;"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">Competitor Landscape — Gap Analysis</div>
+      <table class="pitch-table">
+        <tr><th>Platform</th><th>Live Sell</th><th>Gifts</th><th>Auctions</th><th>Local Pay</th></tr>
+        <tr><td>Soko</td><td><span class="badge badge-green">✓ Yes</span></td><td><span class="badge badge-green">✓ Yes</span></td><td><span class="badge badge-green">✓ Yes</span></td><td><span class="badge badge-green">✓ NGN</span></td></tr>
+        <tr><td>TikTok Shop</td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-purple">Limited</span></td><td><span class="badge badge-amber">No NGN</span></td></tr>
+        <tr><td>Jumia</td><td><span class="badge badge-amber">No</span></td><td><span class="badge badge-amber">No</span></td><td><span class="badge badge-amber">No</span></td><td><span class="badge badge-green">✓</span></td></tr>
+        <tr><td>Instagram</td><td><span class="badge badge-purple">Limited</span></td><td><span class="badge badge-amber">No</span></td><td><span class="badge badge-amber">No</span></td><td><span class="badge badge-amber">No NGN</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">04 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 5 — PRODUCT
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#ec4899;top:-50px;right:-100px;opacity:0.08;"></div>
+
+  <div class="section-tag">Product</div>
+  <h2 class="slide-title">Full-Stack Commerce Platform<br><span class="gradient-text">Already Built</span></h2>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px;">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">✅ Completed Features</div>
+      <ul class="check-list">
+        <li>Live streaming commerce (Agora SDK — 240p/480p/720p/1080p)</li>
+        <li>Full marketplace — products, services, businesses, professionals</li>
+        <li>Real-time auction engine with live bidding</li>
+        <li>Virtual gifting system (coins, 15+ animated gifts, leaderboards)</li>
+        <li>Creator subscription tiers (revenue split engine)</li>
+        <li>Soko Coins economy (buy, earn, redeem, withdraw)</li>
+        <li>Paystack + Flutterwave payment integration</li>
+        <li>Firebase push notifications + Termii SMS</li>
+        <li>AI content moderation (real-time chat filter)</li>
+        <li>League & Rankings (7 tiers: D → Legend)</li>
+        <li>Full KYC / Verification system</li>
+        <li>Escrow-based order protection</li>
+        <li>Multi-currency wallet (₦, $, GHS, KES)</li>
+        <li>Soko Admin Dashboard (full enterprise panel)</li>
+        <li>Fraud & Risk management system</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">📐 Platform Architecture</div>
+      <div class="card" style="margin-bottom:12px;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">FRONTEND</div>
+        <div style="font-size:13px;color:var(--text);">React Native (Mobile) · React 19 (Admin) · TypeScript</div>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">BACKEND / DATABASE</div>
+        <div style="font-size:13px;color:var(--text);">Supabase (PostgreSQL + Realtime + Auth + Storage)</div>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">VIDEO STREAMING</div>
+        <div style="font-size:13px;color:var(--text);">Agora RTC SDK · Cloudinary Media · Mux (roadmap)</div>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">PAYMENTS</div>
+        <div style="font-size:13px;color:var(--text);">Paystack · Flutterwave · CBN-compliant via partners</div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">AI / INTELLIGENCE</div>
+        <div style="font-size:13px;color:var(--text);">Claude API (Anthropic) · Rule-based moderation engine</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">05 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 6 — BUSINESS MODEL
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:600px;height:600px;background:#f59e0b;bottom:-200px;left:-100px;opacity:0.08;"></div>
+
+  <div class="section-tag">Business Model</div>
+  <h2 class="slide-title">6 Revenue Streams.<br><span class="amber-text">All Active Day 1.</span></h2>
+
+  <div class="card-grid card-3" style="margin-top:36px;">
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🛒</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Marketplace Commission</div>
+      <div style="font-size:28px;font-weight:900;color:#7c3aed;margin-bottom:6px;">5–15%</div>
+      <p style="font-size:12px;color:var(--muted);">Per-category commission on every sale. Escrow held until delivery confirmed. Configurable per category.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🎁</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Gift Revenue Split</div>
+      <div style="font-size:28px;font-weight:900;color:#ec4899;margin-bottom:6px;">30%</div>
+      <p style="font-size:12px;color:var(--muted);">Soko earns 30% of all virtual gift transactions. Creators earn 70%. In-app coins must be purchased with real money first.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">⭐</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Subscription Revenue</div>
+      <div style="font-size:28px;font-weight:900;color:#10b981;margin-bottom:6px;">10–20%</div>
+      <p style="font-size:12px;color:var(--muted);">Platform cut from creator subscription tiers (₦500–₦5,000/mo). Creator keeps 80–90%. Growing recurring revenue base.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">⚡</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Ads & Boost</div>
+      <div style="font-size:28px;font-weight:900;color:#f59e0b;margin-bottom:6px;">CPC/CPM</div>
+      <p style="font-size:12px;color:var(--muted);">Sellers pay to boost listings, appear in search, get featured in Live discovery. Flash sale promotions. Banner placements.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🔨</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Auction Fees</div>
+      <div style="font-size:28px;font-weight:900;color:#3b82f6;margin-bottom:6px;">3–8%</div>
+      <p style="font-size:12px;color:var(--muted);">Listing fee per auction + final-value fee on winning bid. Premium auction scheduling for guaranteed prime-time slots.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🪙</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Coin Float Income</div>
+      <div style="font-size:28px;font-weight:900;color:#a78bfa;margin-bottom:6px;">Float</div>
+      <p style="font-size:12px;color:var(--muted);">Coins bought but not yet redeemed sit in Soko's escrow earning interest. Coin expiry policy creates breakage revenue.</p>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">06 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 7 — FINANCIAL PROJECTIONS
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#10b981;top:-100px;right:0;opacity:0.07;"></div>
+
+  <div class="section-tag">Financial Projections</div>
+  <h2 class="slide-title">Conservative Path to<br><span class="green-text">₦2.4B Annual Revenue</span> by Year 3</h2>
+
+  <div class="card-grid card-4" style="margin-top:28px;margin-bottom:24px;">
+    <div class="card stat-big">
+      <div class="num" style="font-size:32px;">₦38M</div>
+      <div class="label">Year 1 Revenue</div>
+      <div class="sub">10K active sellers</div>
+    </div>
+    <div class="card stat-big">
+      <div class="num" style="font-size:32px;background:linear-gradient(135deg,#10b981,#3b82f6);-webkit-background-clip:text;">₦280M</div>
+      <div class="label">Year 2 Revenue</div>
+      <div class="sub">85K active sellers</div>
+    </div>
+    <div class="card stat-big">
+      <div class="num" style="font-size:32px;background:linear-gradient(135deg,#f59e0b,#ec4899);-webkit-background-clip:text;">₦2.4B</div>
+      <div class="label">Year 3 Revenue</div>
+      <div class="sub">500K active sellers</div>
+    </div>
+    <div class="card stat-big">
+      <div class="num" style="font-size:32px;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;">38%</div>
+      <div class="label">Gross Margin Y3</div>
+      <div class="sub">After platform costs</div>
+    </div>
+  </div>
+
+  <div class="card-grid card-2">
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:20px;">Monthly Revenue Progression (₦M)</div>
+      <div class="rev-bar-container">
+        <div class="rev-col">
+          <div class="rev-bar-wrap"><div class="rev-bar" style="height:15%;background:linear-gradient(180deg,#7c3aed,#7c3aed88);"></div></div>
+          <div class="rev-val" style="color:#a78bfa;">₦0.8M</div>
+          <div class="rev-label">M1</div>
+        </div>
+        <div class="rev-col">
+          <div class="rev-bar-wrap"><div class="rev-bar" style="height:22%;background:linear-gradient(180deg,#7c3aed,#7c3aed88);"></div></div>
+          <div class="rev-val" style="color:#a78bfa;">₦1.2M</div>
+          <div class="rev-label">M3</div>
+        </div>
+        <div class="rev-col">
+          <div class="rev-bar-wrap"><div class="rev-bar" style="height:38%;background:linear-gradient(180deg,#ec4899,#ec489988);"></div></div>
+          <div class="rev-val" style="color:#f9a8d4;">₦2.8M</div>
+          <div class="rev-label">M6</div>
+        </div>
+        <div class="rev-col">
+          <div class="rev-bar-wrap"><div class="rev-bar" style="height:58%;background:linear-gradient(180deg,#10b981,#10b98188);"></div></div>
+          <div class="rev-val" style="color:#6ee7b7;">₦5.5M</div>
+          <div class="rev-label">M9</div>
+        </div>
+        <div class="rev-col">
+          <div class="rev-bar-wrap"><div class="rev-bar" style="height:80%;background:linear-gradient(180deg,#f59e0b,#f59e0b88);"></div></div>
+          <div class="rev-val" style="color:#fcd34d;">₦9.2M</div>
+          <div class="rev-label">M12</div>
+        </div>
+        <div class="rev-col">
+          <div class="rev-bar-wrap"><div class="rev-bar" style="height:100%;background:linear-gradient(180deg,#3b82f6,#3b82f688);"></div></div>
+          <div class="rev-val" style="color:#93c5fd;">₦18M</div>
+          <div class="rev-label">M18</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:20px;">Key Metrics to Track</div>
+      <table class="pitch-table">
+        <tr><th>Metric</th><th>Y1 Target</th><th>Y3 Target</th></tr>
+        <tr><td>Registered Users</td><td>50,000</td><td>5,000,000</td></tr>
+        <tr><td>Active Sellers</td><td>10,000</td><td>500,000</td></tr>
+        <tr><td>Active Creators</td><td>2,000</td><td>120,000</td></tr>
+        <tr><td>GMV (Marketplace)</td><td>₦380M</td><td>₦18B</td></tr>
+        <tr><td>Monthly Live Streams</td><td>5,000</td><td>280,000</td></tr>
+        <tr><td>Coin Transactions/day</td><td>1,200</td><td>95,000</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">07 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 8 — TRACTION & BUILD STATUS
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:400px;height:400px;background:#7c3aed;top:0;left:50%;opacity:0.1;"></div>
+
+  <div class="section-tag">Traction</div>
+  <h2 class="slide-title">Platform is <span class="gradient-text">Production-Ready.</span><br>Launching, Not Building.</h2>
+
+  <div class="card-grid card-2" style="margin-top:36px;">
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:20px;">Build Completion Status</div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Mobile App (React Native)</span><span style="color:#10b981;font-weight:700;">82%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:82%;background:linear-gradient(90deg,#7c3aed,#ec4899);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Admin Dashboard</span><span style="color:#10b981;font-weight:700;">95%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:95%;background:linear-gradient(90deg,#10b981,#3b82f6);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Supabase Backend / DB</span><span style="color:#10b981;font-weight:700;">78%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,#f59e0b,#ec4899);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Payment Integration</span><span style="color:#10b981;font-weight:700;">70%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%;background:#f59e0b;"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Live Streaming Engine</span><span style="color:#10b981;font-weight:700;">65%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:65%;background:#3b82f6;"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>AI Moderation + Support</span><span style="color:#10b981;font-weight:700;">60%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:60%;background:#a78bfa;"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">Key Milestones Achieved</div>
+      <ul class="check-list">
+        <li>Full mobile app with 50+ screens built</li>
+        <li>Live streaming via Agora RTC integrated</li>
+        <li>Real-time auction engine built &amp; tested</li>
+        <li>Virtual gift animations (15+ gifts) implemented</li>
+        <li>7-tier league &amp; rankings system live</li>
+        <li>Complete admin dashboard — 35+ management sections</li>
+        <li>KYC verification flow (user, seller, creator)</li>
+        <li>Paystack payment integration (test mode)</li>
+        <li>AI content moderation (real-time chat filter)</li>
+        <li>Multi-currency wallet architecture complete</li>
+        <li>Push notifications (Firebase) working</li>
+        <li>Admin audit trail + compliance tools complete</li>
+        <li>Deployed on Vercel CDN (admin)</li>
+        <li>Supabase Postgres DB with 40+ tables</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">08 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 9 — GO-TO-MARKET STRATEGY
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#ec4899;bottom:0;right:-100px;opacity:0.07;"></div>
+
+  <div class="section-tag">Go-to-Market</div>
+  <h2 class="slide-title">Creator-Led Growth.<br><span class="gradient-text">Viral by Design.</span></h2>
+
+  <div class="card-grid card-3" style="margin-top:36px;">
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:12px;">🌟</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;">Phase 1: Creator Seeding</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Onboard 200 top Nigerian Instagram/TikTok creators with guaranteed ₦500K earnings in first 90 days. Their audiences follow them to Soko.</p>
+      <div style="font-size:11px;font-weight:700;color:#a78bfa;">Month 1–3 · Budget: ₦15M</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:12px;">🛒</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;">Phase 2: Seller Push</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">0% commission for first 6 months. Partner with fashion markets (Balogun, Alaba). Zero-cost onboarding clinics in Lagos, Abuja, PHC.</p>
+      <div style="font-size:11px;font-weight:700;color:#10b981;">Month 2–6 · Budget: ₦8M</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:12px;">📣</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;">Phase 3: Paid Growth</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Performance marketing on Meta &amp; TikTok targeting 18–35 year olds. Referral bonuses (₦1,000 per referred user). App Store push campaigns.</p>
+      <div style="font-size:11px;font-weight:700;color:#f59e0b;">Month 4–12 · Budget: ₦22M</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">🤝 Strategic Partnerships</div>
+      <ul class="check-list" style="gap:7px;">
+        <li>Paystack — payments backbone</li>
+        <li>Flutterwave — multi-currency</li>
+        <li>Agora — video infrastructure</li>
+        <li>MTN/Airtel — data bundle deals</li>
+        <li>Google Play / App Store featuring</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">📱 Acquisition Channels</div>
+      <ul class="check-list" style="gap:7px;">
+        <li>Instagram/TikTok influencer deals</li>
+        <li>YouTube pre-roll ads</li>
+        <li>Twitter/X sponsored content</li>
+        <li>University ambassador program</li>
+        <li>Market-day live stream events</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">🔁 Retention Mechanics</div>
+      <ul class="check-list" style="gap:7px;">
+        <li>Daily login coin rewards</li>
+        <li>League season resets (FOMO)</li>
+        <li>Flash sale push notifications</li>
+        <li>Creator-subscriber exclusives</li>
+        <li>Leaderboard competition</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">09 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 10 — TECH ROADMAP
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#3b82f6;top:0;right:0;opacity:0.07;"></div>
+
+  <div class="section-tag">Technology Roadmap</div>
+  <h2 class="slide-title">From MVP to<br><span class="blue-text">Continent-Scale Platform</span></h2>
+
+  <div style="margin-top:36px;">
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;">Q2</div>
+        <div class="timeline-content">
+          <div class="phase">Q2 2026 — Now Building</div>
+          <div class="ptitle">Affiliate Marketing System · Product Variants · Logistics API Hooks · 2FA Auth for Users</div>
+          <div class="pdesc">Ship remaining mobile screens. Full Supabase schema completion. Paystack live mode go-live. App Store submission.</div>
+        </div>
+        <span class="badge badge-green" style="flex-shrink:0;margin-left:auto;">In Progress</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:linear-gradient(135deg,#10b981,#3b82f6);color:#fff;">Q3</div>
+        <div class="timeline-content">
+          <div class="phase">Q3 2026 — Post Launch</div>
+          <div class="ptitle">Mux Video Transcoding · Recommendation Engine · ElasticSearch · BNPL (Buy Now Pay Later) Hooks</div>
+          <div class="pdesc">Scale to 10,000 concurrent streams. Full-text product search. ML-powered feed algorithm. Logistics partner integrations (Gokada, Kwik).</div>
+        </div>
+        <span class="badge badge-amber" style="flex-shrink:0;margin-left:auto;">Funded Milestone</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;">Q4</div>
+        <div class="timeline-content">
+          <div class="phase">Q4 2026 — Scale</div>
+          <div class="ptitle">Ghana Expansion · Kenya Expansion · Group Live Streams · Creator Analytics Suite</div>
+          <div class="pdesc">Multi-country payment rails. Localized gift catalogs per country. Creator dashboard with revenue analytics. Advanced fraud detection ML.</div>
+        </div>
+        <span class="badge badge-blue" style="flex-shrink:0;margin-left:auto;">Scale Phase</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:linear-gradient(135deg,#3b82f6,#7c3aed);color:#fff;">Y2</div>
+        <div class="timeline-content">
+          <div class="phase">2027 — Enterprise</div>
+          <div class="ptitle">Soko Business Accounts · B2B API · African CDN · Soko Pay (Embedded Finance) · 15-Country Rollout</div>
+          <div class="pdesc">Enterprise seller tiers. API for third-party integrations. Own payment gateway (subject to CBN license acquisition). Soko Money — banking for creators.</div>
+        </div>
+        <span class="badge badge-purple" style="flex-shrink:0;margin-left:auto;">Series A</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">10 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 11 — WHAT'S NEEDED NEXT
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#f59e0b;bottom:-100px;left:0;opacity:0.07;"></div>
+
+  <div class="section-tag">Infrastructure Gaps</div>
+  <h2 class="slide-title">What We Build<br><span class="amber-text">With Investment</span></h2>
+
+  <div class="card-grid card-2" style="margin-top:36px;">
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">🔨 Buildable Now (No External License)</div>
+      <ul class="check-list" style="gap:8px;">
+        <li>Affiliate / influencer marketing engine (admin-managed)</li>
+        <li>Product variants system (size, color, material)</li>
+        <li>Logistics partner API hooks (Gokada, Kwik, DHL)</li>
+        <li>2FA (TOTP + SMS via Termii) for users</li>
+        <li>Supabase full-text search (pgvector + tsvector)</li>
+        <li>Mux video transcoding (adaptive bitrate)</li>
+        <li>Creator analytics dashboard (earnings, views, growth)</li>
+        <li>Referral program V2 (tier-based rewards)</li>
+        <li>Flash sale scheduling engine</li>
+        <li>Bulk product import (CSV upload for sellers)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">⏳ Requires Funding / Licensing</div>
+      <ul class="check-list" style="gap:8px;">
+        <li class="warn">ML recommendation algorithm (GPU compute cost)</li>
+        <li class="warn">ElasticSearch / Typesense (managed hosting $$)</li>
+        <li class="warn">Own CDN infrastructure (edge nodes in Lagos/Nairobi)</li>
+        <li class="warn">Mux live streaming at scale ($0.005/min/viewer)</li>
+        <li class="warn">CBN Payment Service Bank License (₦500M capital requirement)</li>
+        <li class="warn">BNPL integration (requires credit risk partnership)</li>
+        <li class="warn">Fraud ML model training (needs transaction data history)</li>
+        <li class="future">Embedded banking (requires NDIC/CBN approval)</li>
+        <li class="future">Cross-border remittance (SWIFT partnership)</li>
+        <li class="future">Physical POS for market sellers</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p style="font-size:13px;color:var(--muted);">
+    <strong style="color:var(--text);">CBN Compliance Strategy:</strong> Soko partners with Paystack and Flutterwave (both CBN-licensed) to handle all payment processing. We operate as a commerce platform, not a financial institution. This is identical to how Jumia, Jiji, and Konga operate today. No CBN license required for core operations.
+  </p>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">11 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 12 — FUNDING ASK
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:600px;height:600px;background:#7c3aed;top:-100px;right:-200px;opacity:0.12;"></div>
+
+  <div class="section-tag">Funding Ask</div>
+  <h2 class="slide-title">Raising <span class="gradient-text">$250,000</span><br>Pre-Seed Round</h2>
+  <p class="body-text" style="margin-bottom:36px;">This capital completes the platform, achieves launch, and funds first 12 months of growth to hit ₦100M ARR milestone.</p>
+
+  <div class="funds-grid">
+    <div class="fund-item" style="border-color:rgba(124,58,237,0.3);">
+      <div class="fund-pct gradient-text">35%</div>
+      <div class="fund-label">Product Completion</div>
+      <div class="fund-amount gradient-text">$87,500</div>
+      <div class="fund-desc">Finish mobile app, fix streaming pipeline, build affiliate system, product variants, logistics integrations. 2 senior engineers for 9 months.</div>
+    </div>
+    <div class="fund-item" style="border-color:rgba(16,185,129,0.3);">
+      <div class="fund-pct" style="color:#10b981;">25%</div>
+      <div class="fund-label">Go-to-Market</div>
+      <div class="fund-amount" style="color:#10b981;">$62,500</div>
+      <div class="fund-desc">Creator seed deals, influencer partnerships, app store campaigns, market activation events, referral program bankroll.</div>
+    </div>
+    <div class="fund-item" style="border-color:rgba(59,130,246,0.3);">
+      <div class="fund-pct" style="color:#3b82f6;">20%</div>
+      <div class="fund-label">Infrastructure</div>
+      <div class="fund-amount" style="color:#3b82f6;">$50,000</div>
+      <div class="fund-desc">Supabase Pro, Agora credits, Mux streaming, Firebase, Cloudinary, Vercel Pro, monitoring tools, domain, SSL, security audits.</div>
+    </div>
+    <div class="fund-item" style="border-color:rgba(245,158,11,0.3);">
+      <div class="fund-pct" style="color:#f59e0b;">20%</div>
+      <div class="fund-label">Operations + Legal</div>
+      <div class="fund-amount" style="color:#f59e0b;">$50,000</div>
+      <div class="fund-desc">Company incorporation, CAC, NDPC registration, legal counsel, IP protection, accounting, 12-month team salary buffer, office.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;padding:16px 20px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);">Investment Terms</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">SAFE note · 20% discount · $2M valuation cap</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:24px;font-weight:900;background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">$250K</div>
+        <div style="font-size:12px;color:var(--muted);">Targeting close by Aug 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">12 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 13 — COMPETITIVE MOAT
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#ec4899;bottom:0;right:0;opacity:0.07;"></div>
+
+  <div class="section-tag">Competitive Advantage</div>
+  <h2 class="slide-title">Why Soko Wins.<br><span class="gradient-text">5 Defensible Moats.</span></h2>
+
+  <div class="card-grid card-2" style="margin-top:36px;gap:14px;">
+    <div class="card" style="border-color:rgba(124,58,237,0.25);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#7c3aed20,#ec489920);display:flex;align-items:center;justify-content:center;font-size:20px;">🌍</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);">Africa-First Architecture</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);">Built from day 1 for Nigerian naira, African logistics, poor network conditions (3G-optimized streaming), and local gifting culture. Global competitors cannot retrofit this.</p>
+    </div>
+    <div class="card" style="border-color:rgba(236,72,153,0.25);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ec489920,#f59e0b20);display:flex;align-items:center;justify-content:center;font-size:20px;">🔗</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);">Network Effects</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);">More creators → more buyers → more sellers → more gifting. A two-sided marketplace with a third creator layer creates compounding network effects that are nearly impossible to replicate once established.</p>
+    </div>
+    <div class="card" style="border-color:rgba(16,185,129,0.25);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#10b98120,#3b82f620);display:flex;align-items:center;justify-content:center;font-size:20px;">🪙</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);">Coin Economy Lock-In</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);">Users who buy Soko Coins are committed to the platform. Coin balances, league rankings, and gift history create massive switching costs. This is the same mechanism that keeps billions on WeChat and TikTok.</p>
+    </div>
+    <div class="card" style="border-color:rgba(245,158,11,0.25);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#f59e0b20,#ec489920);display:flex;align-items:center;justify-content:center;font-size:20px;">📺</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);">Live Commerce is Habit-Forming</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);">Live commerce converts 10x better than static product pages (data from Taobao Live, TikTok Shop). Once users buy from a live stream, they return. This engagement pattern drives daily active use far beyond typical e-commerce.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;display:flex;align-items:center;gap:16px;">
+    <div style="font-size:24px;">🛡️</div>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">Data Moat</div>
+      <p style="font-size:13px;color:var(--muted);">Every transaction, stream, bid, gift, and click trains Soko's recommendation and fraud models. By Year 2 we have behavioral data on millions of African consumers — a dataset no foreign competitor can buy or replicate.</p>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">13 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 14 — RISKS & MITIGATION
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="section-tag">Risk Management</div>
+  <h2 class="slide-title">We've Thought About<br><span style="color:#ef4444;">Every Risk.</span></h2>
+
+  <div style="margin-top:36px;">
+    <table class="pitch-table" style="background:var(--card);border-radius:16px;overflow:hidden;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.02);">
+          <th style="width:25%;">Risk</th>
+          <th style="width:15%;">Level</th>
+          <th style="width:30%;">Impact</th>
+          <th style="width:30%;">Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CBN Regulatory Change</td>
+          <td><span class="badge badge-amber">Medium</span></td>
+          <td style="color:var(--muted);">Payment disruption</td>
+          <td style="color:var(--muted);">Paystack/Flutterwave partnerships provide CBN-compliant layer. We operate as marketplace, not bank.</td>
+        </tr>
+        <tr>
+          <td>TikTok Shop Nigeria Launch</td>
+          <td><span class="badge badge-amber">Medium</span></td>
+          <td style="color:var(--muted);">Competitor enters market</td>
+          <td style="color:var(--muted);">Soko is Africa-native: Naira payments, local logistics, Nigerian creators, local customer support. TikTok cannot localize this fast.</td>
+        </tr>
+        <tr>
+          <td>Agora / Streaming Cost at Scale</td>
+          <td><span class="badge badge-amber">Medium</span></td>
+          <td style="color:var(--muted);">Unit economics pressure</td>
+          <td style="color:var(--muted);">Commission and gift revenue far exceeds streaming cost. $0.0059/min/host. At scale, migrate to Mux or self-hosted media server.</td>
+        </tr>
+        <tr>
+          <td>Fraud on Marketplace</td>
+          <td><span class="badge badge-green">Low</span></td>
+          <td style="color:var(--muted);">Trust damage</td>
+          <td style="color:var(--muted);">Escrow-based payments, KYC verification, AI fraud detection, seller ratings, buyer protection policy. Comparable to Paystack's fraud tools.</td>
+        </tr>
+        <tr>
+          <td>Mobile Data Costs for Users</td>
+          <td><span class="badge badge-amber">Medium</span></td>
+          <td style="color:var(--muted);">Adoption barrier</td>
+          <td style="color:var(--muted);">Zero-rated Soko traffic via MTN/Airtel partnership. 3G-optimized streams. Offline browsing for product listings.</td>
+        </tr>
+        <tr>
+          <td>Creator Churn</td>
+          <td><span class="badge badge-green">Low</span></td>
+          <td style="color:var(--muted);">Engagement drop</td>
+          <td style="color:var(--muted);">League seasons, subscription revenue lock-in, exclusive tools unavailable elsewhere. Comparable to Twitch creator incentives.</td>
+        </tr>
+        <tr>
+          <td>NDPA Data Compliance</td>
+          <td><span class="badge badge-green">Low</span></td>
+          <td style="color:var(--muted);">Regulatory fine</td>
+          <td style="color:var(--muted);">Full NDPC registration, data deletion tools (in admin), privacy policy, consent management built into onboarding flow.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">14 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 15 — TEAM
+═══════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="width:500px;height:500px;background:#7c3aed;top:0;left:50%;transform:translateX(-50%);opacity:0.08;"></div>
+
+  <div class="section-tag">The Team</div>
+  <h2 class="slide-title">Built by Operators.<br><span class="gradient-text">Backed by Vision.</span></h2>
+
+  <div class="team-grid" style="margin-top:36px;">
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#7c3aed,#ec4899);">IO</div>
+      <div class="team-name">Ibitoye Oluwasegun E.</div>
+      <div class="team-role">Founder & CEO</div>
+      <div class="team-skills">Product · Vision · Operations · Business Development</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6);">CTO</div>
+      <div class="team-name">CTO (Hiring)</div>
+      <div class="team-role">Chief Technology Officer</div>
+      <div class="team-skills">React Native · Node.js · Supabase · DevOps</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#f59e0b,#ec4899);">CMO</div>
+      <div class="team-name">CMO (Hiring)</div>
+      <div class="team-role">Growth & Marketing</div>
+      <div class="team-skills">Creator Partnerships · Performance Marketing · Brand</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#3b82f6,#7c3aed);">SE</div>
+      <div class="team-name">Senior Engineer ×2 (Hiring)</div>
+      <div class="team-role">Product Engineering</div>
+      <div class="team-skills">Mobile · Backend · Streaming · Payments</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#ec4899,#f59e0b);">CS</div>
+      <div class="team-name">Customer Success Lead (Hiring)</div>
+      <div class="team-role">Creator & Seller Support</div>
+      <div class="team-skills">Onboarding · Community · Creator Success</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#a78bfa,#ec4899);">AI</div>
+      <div class="team-name">Advisors Sought</div>
+      <div class="team-role">Strategic Advisors</div>
+      <div class="team-skills">Fintech · E-Commerce · African VC Network</div>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span>Soko Pitch Deck 2026</span><span>soko.africa</span></div>
+  <div class="slide-number">15 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 16 — THE ASK / CLOSE
+═══════════════════════════════════════════════════════ -->
+<section class="slide" style="background:radial-gradient(ellipse at 60% 40%, rgba(124,58,237,0.12) 0%, transparent 70%), radial-gradient(ellipse at 30% 70%, rgba(236,72,153,0.08) 0%, transparent 60%), var(--dark);">
+  <div class="glow" style="width:700px;height:700px;background:#7c3aed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.06;"></div>
+
+  <div style="text-align:center;max-width:760px;margin:0 auto;">
+    <div class="section-tag">The Ask</div>
+    <h1 class="hero" style="font-size:56px;margin-bottom:24px;">
+      Join Us in Building<br><span class="gradient-text">Africa's Commerce Future</span>
+    </h1>
+    <p style="font-size:18px;color:var(--muted);line-height:1.7;margin-bottom:48px;">
+      1.4 billion people. A $180B market with no clear winner. An app already 80% built. A team that ships. We're raising $250K to cross the finish line and take Africa's creator economy global.
+    </p>
+
+    <div class="card-grid card-3" style="margin-bottom:40px;text-align:left;">
+      <div class="card stat-big">
+        <div class="num" style="font-size:36px;">$250K</div>
+        <div class="label">Round Size</div>
+        <div class="sub">SAFE · $2M Cap · 20% Discount</div>
+      </div>
+      <div class="card stat-big">
+        <div class="num" style="font-size:36px;background:linear-gradient(135deg,#10b981,#3b82f6);-webkit-background-clip:text;">12 mo</div>
+        <div class="label">Runway</div>
+        <div class="sub">To ₦100M ARR milestone</div>
+      </div>
+      <div class="card stat-big">
+        <div class="num" style="font-size:36px;background:linear-gradient(135deg,#ec4899,#f59e0b);-webkit-background-clip:text;">Aug 26</div>
+        <div class="label">Close Date</div>
+        <div class="sub">Launch before Q3 peak season</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="mailto:ibitoyesegun5@gmail.com" class="nav-btn btn-primary" style="font-size:15px;padding:14px 32px;border-radius:14px;text-decoration:none;">📧 Get in Touch</a>
+      <button class="nav-btn btn-outline" style="font-size:15px;padding:14px 32px;border-radius:14px;" onclick="window.print()">⬇ Download This Deck</button>
+    </div>
+
+    <p style="font-size:12px;color:rgba(240,242,255,0.18);margin-top:32px;">
+      This document contains forward-looking statements and financial projections based on management assumptions. Past performance is not indicative of future results.
+    </p>
+  </div>
+
+  <div class="slide-footer" style="position:relative;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);">
+    <span>© 2026 Soko Technologies Ltd. All rights reserved.</span>
+    <span style="color:rgba(240,242,255,0.18);">Confidential — Not for distribution</span>
+  </div>
+  <div class="slide-number">16 / 16</div>
+</section>
+
+</body>
+</html>
