@@ -37,6 +37,9 @@ import { RevenueIntelligence } from "./pages/revenue/RevenueIntelligence";
 import { SystemLogs } from "./pages/logs/SystemLogs";
 import { AffiliateMarketing } from "./pages/affiliate/AffiliateMarketing";
 import { LogisticsPartners } from "./pages/logistics/LogisticsPartners";
+import { ProductVariants } from "./pages/variants/ProductVariants";
+import { TwoFactorAuth } from "./pages/two-factor/TwoFactorAuth";
+import { CreatorAnalytics } from "./pages/creators/CreatorAnalytics";
 
 export default function App() {
   return (
@@ -44,16 +47,18 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route element={<Layout />}>
         {/* Main Menu */}
-        <Route path="/"                element={<Overview />} />
-        <Route path="/users"           element={<Users />} />
-        <Route path="/creators"        element={<Creators />} />
-        <Route path="/analytics"       element={<Analytics />} />
-        <Route path="/revenue"         element={<RevenueIntelligence />} />
+        <Route path="/"                    element={<Overview />} />
+        <Route path="/users"               element={<Users />} />
+        <Route path="/creators"            element={<Creators />} />
+        <Route path="/creator-analytics"   element={<CreatorAnalytics />} />
+        <Route path="/analytics"           element={<Analytics />} />
+        <Route path="/revenue"             element={<RevenueIntelligence />} />
 
         {/* Platform */}
         <Route path="/live"            element={<LiveManagement />} />
         <Route path="/marketplace"     element={<Marketplace />} />
         <Route path="/products"        element={<Products />} />
+        <Route path="/variants"        element={<ProductVariants />} />
         <Route path="/services"        element={<Services />} />
         <Route path="/businesses"      element={<Businesses />} />
         <Route path="/professionals"   element={<Professionals />} />
@@ -83,6 +88,7 @@ export default function App() {
         <Route path="/verification"    element={<Verification />} />
         <Route path="/fraud"           element={<FraudRisk />} />
         <Route path="/compliance"      element={<Compliance />} />
+        <Route path="/two-factor"      element={<TwoFactorAuth />} />
         <Route path="/ai-settings"     element={<AISettings />} />
 
         {/* Team */}

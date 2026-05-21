@@ -6,7 +6,7 @@ import {
   Trophy, ImageIcon, BarChart3, Shield, CheckSquare, Sparkles,
   Flag, Settings, ScrollText, LogOut, Briefcase, Tag, MessageSquare,
   Layout, AlertTriangle, Megaphone, Code, Activity, DollarSign, UserCog, Bot,
-  Link2, Truck
+  Link2, Truck, Layers, ShieldCheck, PieChart
 } from "lucide-react";
 
 const NAV = [
@@ -15,8 +15,9 @@ const NAV = [
     items: [
       { to: "/",             label: "Dashboard",        icon: LayoutDashboard },
       { to: "/users",        label: "Users",            icon: Users },
-      { to: "/creators",     label: "Creators",         icon: Star },
-      { to: "/analytics",    label: "Analytics",        icon: BarChart3 },
+      { to: "/creators",            label: "Creators",            icon: Star },
+      { to: "/creator-analytics",   label: "Creator Analytics",   icon: PieChart },
+      { to: "/analytics",           label: "Analytics",           icon: BarChart3 },
       { to: "/revenue",      label: "Revenue",          icon: DollarSign },
     ],
   },
@@ -26,6 +27,7 @@ const NAV = [
       { to: "/live",          label: "Live Streaming",  icon: Radio },
       { to: "/marketplace",   label: "Marketplace",     icon: ShoppingBag },
       { to: "/products",      label: "Products",        icon: Tag },
+      { to: "/variants",      label: "Product Variants", icon: Layers },
       { to: "/services",      label: "Services",        icon: Wrench },
       { to: "/businesses",    label: "Businesses",      icon: Building2 },
       { to: "/professionals", label: "Professionals",   icon: Briefcase },
@@ -67,6 +69,7 @@ const NAV = [
       { to: "/verification",  label: "Verification",      icon: CheckSquare },
       { to: "/fraud",         label: "Fraud & Risk",      icon: AlertTriangle },
       { to: "/compliance",    label: "Compliance",        icon: Shield },
+      { to: "/two-factor",    label: "2FA Management",    icon: ShieldCheck },
       { to: "/ai-settings",   label: "AI Settings",       icon: Bot },
     ],
   },
