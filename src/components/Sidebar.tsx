@@ -6,7 +6,7 @@ import {
   Trophy, ImageIcon, BarChart3, Shield, CheckSquare, Sparkles,
   Flag, Settings, ScrollText, LogOut, Briefcase, Tag, MessageSquare,
   Layout, AlertTriangle, Megaphone, Code, Activity, DollarSign, UserCog, Bot,
-  Link2, Truck, Layers, ShieldCheck, PieChart, TrendingUp, Flag, Gavel
+  Link2, Truck, Layers, ShieldCheck, PieChart, TrendingUp
 } from "lucide-react";
 
 const NAV = [
